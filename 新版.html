@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知行导航 | 精选网址聚合平台</title>
+    
+    <!-- 性能优化：preconnect预连接 -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    
+    <!-- 压缩版Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Font Awesome仅加载必要图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
+    
+    <!-- 自定义字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- 拼音库用于拼音搜索 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pinyin/2.11.2/pinyin.web.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        surface: {
+                            50: '#FAFAFA',
+                            100: '#1A1A1A',
+                            200: '#252525',
+                            300: '#2D2D2D',
+                            400: '#404040',
+                            500: '#737373',
+                            600: '#A3A3A3',
+                            700: '#D4D4D4',
+                            800: '#E5E5E5',
+                            900: '#FAFAFA'
+                        },
+                        gold: {
+                            400: '#D4AF37',
+                            500: '#C9A227',
+                            600: '#B8860B',
+                            700: '#9A7B0A'
+                        }
+                    },
+                    fontFamily: {
+                        'sans': ['Outfit', 'system-ui', 'sans-serif'],
+                        'serif': ['Cormorant Garamond', 'Georgia', 'serif'],
+                    },
+                    animation: {
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                        'slide-up': 'slideUp 0.3s ease-out',
+                        'pulse-subtle': 'pulseSubtle 2s infinite',
+                        'float': 'float 3s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0' },
+                            '100%': { opacity: '1' }
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(10px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' }
+                        },
+                        pulseSubtle: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '0.8' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-5px)' }
+                        }
+                    },
+                    backdropBlur: {
+                        'xs': '2px',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        body {
+            font-family: 'Outfit', system-ui, sans-serif;
+            background: #0A0A0A;
+            min-height: 100vh;
+            color: #FAFAFA;
+        }
+        
+        /* 自定义滚动条 */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1A1A1A;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #404040;
+            border-radius: 3px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #D4AF37;
+        }
+        
+        /* 骨架屏 */
+        .skeleton {
+            background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+        
+        @keyframes loading {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        
+        /* 图片懒加载样式 */
+        .lazy-image {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .lazy-image.loaded {
+            opacity: 1;
+        }
+        
+        /* 性能优化：减少重绘 */
+        .will-change-transform {
+            will-change: transform;
+        }
+        
+        /* 导航项样式 */
+        .nav-item {
+            padding: 0.5rem 1rem;
+            border-radius: 0.5rem;
+            color: #A3A3A3;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            font-weight: 500;
+            text-decoration: none;
+        }
+        
+        .nav-item:hover {
+            color: #D4AF37;
+            background-color: rgba(212, 175, 55, 0.06);
+        }
+        
+        .nav-item:hover svg,
+        .nav-item.active svg {
+            color: inherit;
+        }
+        
+        .nav-item.active {
+            background-color: rgba(212, 175, 55, 0.1);
+            color: #D4AF37;
+            font-weight: 500;
+        }
+        
+        /* 搜索模态框样式 - 隐藏但保留DOM */
+        .search-modal {
+            display: none !important;
+        }
+        
+        /* 新搜索框结果浮层 */
+        .search-results-new {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #1A1A1A;
+            border: 1px solid #2D2D2D;
+            border-radius: 12px;
+            margin-top: 8px;
+            max-height: 400px;
+            overflow-y: auto;
+            z-index: 50;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .search-result-item-new {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid #252525;
+            transition: all 0.2s;
+            cursor: pointer;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        .search-result-item-new:hover,
+        .search-result-item-new.selected {
+            background-color: #252525;
+        }
+        .search-result-item-new:last-child {
+            border-bottom: none;
+        }
+        .search-highlight {
+            background-color: rgba(212, 175, 55, 0.2);
+            padding: 0 2px;
+            border-radius: 2px;
+            color: #D4AF37;
+        }
+    </style>
+</head>
+<body class="text-surface-900 antialiased bg-[#0A0A0A]">
+    <!-- 骨架屏（内容加载前显示） -->
+    <div id="skeleton" class="fixed inset-0 bg-[#0A0A0A] z-50 flex items-center justify-center">
+        <div class="text-center">
+            <div class="w-12 h-12 rounded-full border border-gold-500/30 animate-pulse mx-auto mb-4"></div>
+            <div class="text-gold-500 font-light tracking-[0.2em] text-sm uppercase">知行导航</div>
+        </div>
+    </div>
+
+    <!-- 返回顶部按钮 -->
+    <button id="backToTop" class="fixed bottom-8 right-8 w-11 h-11 border border-surface-300 text-surface-700 rounded-full hover:border-gold-500 hover:text-gold-500 transform hover:-translate-y-0.5 transition-all duration-300 hidden z-40">
+        <svg viewBox="0 0 24 24" class="w-5 h-5" fill="currentColor"><path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"/></svg>
+    </button>
+
+    <!-- 原搜索模态框 - 隐藏但保留DOM（不删减内容） -->
+    <div id="searchModal" class="search-modal items-center justify-center p-4">
+        <div class="search-content">
+            <div class="p-6 border-b border-surface-200">
+                <div class="relative">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 absolute left-4 top-1/2 transform -translate-y-1/2 text-gold-500/90" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        placeholder="搜索网站名称或描述..." 
+                        class="w-full pl-12 pr-4 py-3 bg-surface-200/50 border border-surface-300 rounded-lg text-surface-900 placeholder-surface-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/20"
+                        autocomplete="off"
+                    >
+                    <button id="closeSearch" class="absolute right-4 top-1/2 transform -translate-y-1/2 text-surface-500 hover:text-surface-700">
+                        <svg viewBox="0 0 24 24" class="w-4 h-4" fill="currentColor"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+                    </button>
+                </div>
+                <div class="mt-3 text-xs text-surface-500 tracking-wide">
+                    按 Enter 搜索 · Esc 关闭 · ↑↓ 选择
+                </div>
+            </div>
+            
+            <div class="search-results p-2" id="searchResults">
+                <!-- 搜索结果将在这里动态生成 -->
+            </div>
+            
+            <div class="p-4 border-t border-surface-200 bg-surface-200/30">
+                <div class="text-xs text-surface-500">
+                    <svg viewBox="0 0 24 24" class="w-4 h-4 mr-2 text-gold-500/80 inline-block" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                    支持搜索网站名称、描述和分类
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <nav id="navbar" class="sticky top-0 z-50 bg-[#0A0A0A]/80 backdrop-blur-xl border-b border-surface-200/50 transition-all duration-300">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex items-center justify-between">
+                <!-- Logo -->
+                <a href="#" class="flex items-center gap-3 group">
+                    <div class="relative">
+                        <div class="w-9 h-9 rounded-lg border border-surface-300 flex items-center justify-center group-hover:border-gold-500/50 transition-colors duration-300">
+                            <svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        </div>
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-medium tracking-tight text-surface-900 font-serif">知行导航</h1>
+                        <p class="text-[10px] text-surface-500 opacity-0 group-hover:opacity-100 transition-opacity duration-300 tracking-widest uppercase">Curated</p>
+                    </div>
+                </a>
+
+                <!-- 桌面导航 + 时钟 + 搜索按钮 + 新标签页按钮 -->
+                <div class="hidden md:flex items-center gap-8">
+                    <!-- 时钟 -->
+                    <div class="flex items-center gap-2 px-3 py-1.5 border border-surface-300/50 rounded text-surface-600">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-gold-500/80 flex-shrink-0" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>
+                        <span id="clock" class="text-xs font-light tabular-nums tracking-wide"></span>
+                    </div>
+                    
+                    <!-- 搜索按钮（点击聚焦到新搜索框） -->
+                    <button id="desktopSearchBtn" class="group flex items-center gap-2 px-4 py-2 border border-surface-300/50 rounded hover:border-gold-500/50 transition-colors text-surface-600 hover:text-gold-500">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 transition-colors" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                        <span class="text-sm font-light">搜索</span>
+                        <span class="text-[10px] text-surface-500 bg-surface-200 px-1.5 py-0.5 rounded">⌘K</span>
+                    </button>
+
+                    <!-- 新标签页按钮 -->
+                    <button id="newTabBtn" class="group flex items-center gap-2 px-4 py-2 border border-surface-300/50 rounded hover:border-gold-500/50 transition-colors text-surface-600 hover:text-gold-500">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM11 7v4H7v2h4v4h2v-4h4v-2h-4V7h-2z"/></svg>
+                        <span class="text-sm font-light">新标签页</span>
+                    </button>
+                    
+                    <!-- 导航链接 -->
+                    <div class="flex items-center gap-1">
+                        <a href="#home" class="nav-item active">
+                            <svg viewBox="0 0 24 24" class="w-4 h-4 mr-2 inline-block" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>首页
+                        </a>
+                        <a href="#websites" class="nav-item">
+                            <i class="fas fa-globe mr-2"></i>网址合集
+                        </a>
+                        <a href="#tools" class="nav-item">
+                            <svg viewBox="0 0 24 24" class="w-4 h-4 mr-2 inline-block" fill="currentColor"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6 6 9 1.6 4.7C.4 7.1.9 10.1 2.9 12.1c1.9 1.9 4.6 2.4 6.9 1.5l9.1 9.1c.4.4 1 .4 1.4 0l2.3-2.3c.5-.4.5-1.1.1-1.4z"/></svg>实用工具
+                        </a>
+                        <a href="#about" class="nav-item">
+                            <svg viewBox="0 0 24 24" class="w-4 h-4 mr-2 inline-block" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>关于
+                        </a>
+                    </div>
+                </div>
+
+                <!-- 移动端：时钟、搜索按钮和新标签页按钮 -->
+                <div class="md:hidden flex items-center gap-3">
+                    <div class="flex items-center gap-2 px-3 py-1.5 border border-surface-300/50 rounded text-surface-600">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-gold-500/80 flex-shrink-0" fill="currentColor"><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10 10-4.5 10-10S17.5 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.5-13H11v6l5.2 3.2.8-1.3-4.5-2.7V7z"/></svg>
+                        <span id="mobileClock" class="text-xs font-light tabular-nums"></span>
+                    </div>
+                    <button id="mobileSearchBtn" class="w-9 h-9 rounded border border-surface-300/50 flex items-center justify-center hover:border-gold-500/50 text-surface-600 hover:text-gold-500 transition-colors">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    </button>
+                    <!-- 移动端新标签页按钮 -->
+                    <button id="mobileNewTabBtn" class="w-9 h-9 rounded border border-surface-300/50 flex items-center justify-center hover:border-gold-500/50 text-surface-600 hover:text-gold-500 transition-colors">
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5" fill="currentColor"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V5h14v14zM11 7v4H7v2h4v4h2v-4h4v-2h-4V7h-2z"/></svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="min-h-screen">
+        <!-- Hero区域 -->
+        <section id="home" class="pt-20 pb-32 md:pt-36 md:pb-44 relative overflow-hidden">
+            <!-- 背景装饰 -->
+            <div class="absolute inset-0 -z-10">
+                <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-gold-500/5 rounded-full blur-3xl"></div>
+                <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-gold-500/3 rounded-full blur-3xl"></div>
+                <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-gold-500/20 to-transparent"></div>
+            </div>
+            
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+                <div class="max-w-3xl mx-auto text-center animate-fade-in">
+                    <!-- 头像 -->
+                    <div class="relative inline-block mb-12">
+                        <div class="w-28 h-28 md:w-32 md:h-32 rounded-full border border-surface-300 overflow-hidden ring-1 ring-gold-500/20 bg-surface-100 flex items-center justify-center">
+                            <svg viewBox="0 0 100 100" class="w-16 h-16 md:w-20 md:h-20 text-gold-500/90" fill="currentColor">
+                                <!-- 简约头像：圆形轮廓 + 抽象面部 -->
+                                <circle cx="50" cy="50" r="42" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.4"/>
+                                <circle cx="50" cy="38" r="12" fill="currentColor" opacity="0.9"/>
+                                <path d="M30 75 Q50 58 70 75" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" opacity="0.8"/>
+                                <circle cx="38" cy="35" r="2" fill="#0A0A0A" opacity="0.6"/>
+                                <circle cx="62" cy="35" r="2" fill="#0A0A0A" opacity="0.6"/>
+                            </svg>
+                        </div>
+                        <div class="absolute -bottom-1 -right-1 w-8 h-8 border border-gold-500/50 rounded-full flex items-center justify-center bg-[#0A0A0A]">
+                            <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-gold-500" fill="currentColor"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        </div>
+                    </div>
+                    
+                    <!-- 标题 -->
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-serif font-light mb-6 tracking-tight text-surface-900">
+                        知行导航
+                    </h1>
+                    <p class="text-xs tracking-[0.3em] uppercase text-gold-500/90 mb-8">Curated Navigation</p>
+                    
+                    <!-- 描述 -->
+                    <p class="text-base md:text-lg text-surface-600 mb-12 max-w-xl mx-auto leading-relaxed font-light">
+                        专注收集全网优质资源，打造高效实用的个人导航站
+                    </p>
+                    
+                    <!-- 新增搜索框区域（替代原搜索功能） -->
+                    <div class="mb-12 max-w-2xl mx-auto relative" id="newSearchContainer">
+                        <div class="flex flex-col sm:flex-row gap-3 items-stretch">
+                            <div class="flex-grow relative">
+                                <input type="text" id="newSearchInput" placeholder="输入关键词或拼音..." class="w-full px-5 py-3 bg-surface-100 border border-surface-300 rounded-sm text-surface-900 placeholder-surface-500 focus:outline-none focus:border-gold-500 focus:ring-1 focus:ring-gold-500/20 pr-24">
+                                <div class="absolute right-2 top-1/2 transform -translate-y-1/2 flex items-center gap-1">
+                                    <select id="searchEngineSelect" class="bg-surface-200 border border-surface-300 text-surface-600 text-xs rounded px-2 py-1 focus:outline-none focus:border-gold-500">
+                                        <option value="baidu">百度</option>
+                                        <option value="google">谷歌</option>
+                                        <option value="bing">必应</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <button id="newSearchBtn" class="px-8 py-3 border border-gold-500/50 text-gold-500 rounded-sm hover:bg-gold-500/10 transition-all duration-300 font-light text-sm tracking-wide whitespace-nowrap">
+                                搜索
+                            </button>
+                        </div>
+                        <!-- 搜索结果浮层（站内搜索用） -->
+                        <div id="newSearchResults" class="search-results-new hidden"></div>
+                    </div>
+                    
+                    <!-- CTA按钮 -->
+                    <div class="flex flex-wrap gap-3 justify-center mb-16">
+                        <a href="#websites" class="px-8 py-3 border border-gold-500/50 text-gold-500 rounded-sm hover:bg-gold-500/10 transition-all duration-300 font-light text-sm tracking-wide">
+                            探索资源
+                        </a>
+                        <button id="randomSite" class="px-8 py-3 border border-surface-300 text-surface-600 rounded-sm hover:border-gold-500/50 hover:text-gold-500 transition-all duration-300 font-light text-sm tracking-wide">
+                            随机发现
+                        </button>
+                        <!-- 快速搜索按钮改为聚焦到新搜索框 -->
+                        <button id="heroSearchBtn" class="px-8 py-3 border border-surface-300 text-surface-600 rounded-sm hover:border-gold-500/50 hover:text-gold-500 transition-all duration-300 font-light text-sm tracking-wide">
+                            快速搜索
+                        </button>
+                    </div>
+                    
+                    <!-- 统计信息 -->
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-px max-w-2xl mx-auto">
+                        <div class="stat-card">
+                            <div class="text-2xl font-serif font-light text-gold-500">200+</div>
+                            <div class="text-xs text-surface-500 tracking-widest uppercase mt-1">精选网址</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-2xl font-serif font-light text-gold-500">15+</div>
+                            <div class="text-xs text-surface-500 tracking-widest uppercase mt-1">分类标签</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-2xl font-serif font-light text-gold-500">24/7</div>
+                            <div class="text-xs text-surface-500 tracking-widest uppercase mt-1">持续更新</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="text-2xl font-serif font-light text-gold-500">100%</div>
+                            <div class="text-xs text-surface-500 tracking-widest uppercase mt-1">人工筛选</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 网址合集 -->
+        <section id="websites" class="py-24 md:py-32">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                <div class="text-center mb-16 animate-slide-up">
+                    <p class="text-xs tracking-[0.2em] uppercase text-gold-500/80 mb-4">Collection</p>
+                    <h2 class="text-3xl md:text-4xl font-serif font-light mb-4 text-surface-900">
+                        精选网址合集
+                    </h2>
+                    <p class="text-surface-600 text-sm max-w-xl mx-auto font-light">经过严格筛选的优质网络资源</p>
+                </div>
+
+                <!-- 分类导航 -->
+                <div class="flex flex-wrap gap-2 justify-center mb-14" id="categoryTabs">
+                    <button class="category-tab active" data-category="all">全部</button>
+                    <button class="category-tab" data-category="entertainment">娱乐休闲</button>
+                    <button class="category-tab" data-category="life">生活服务</button>
+                    <button class="category-tab" data-category="tools">效率工具</button>
+                    <button class="category-tab" data-category="game">游戏</button>
+                    <button class="category-tab" data-category="learning">学习资源</button>
+                </div>
+
+                <!-- 网址网格 -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6" id="websiteGrid">
+                    <!-- 网址卡片将通过JS动态生成 -->
+                </div>
+
+                <!-- 加载更多 -->
+                <div class="text-center mt-16">
+                    <button id="loadMore" class="px-8 py-3 border border-surface-300 text-surface-600 rounded-sm hover:border-gold-500 hover:text-gold-500 transition-all duration-300 font-light text-sm tracking-wide">
+                        加载更多
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 实用工具区域 -->
+        <section id="tools" class="py-24 md:py-32 border-t border-surface-200/30">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                <div class="text-center mb-16">
+                    <p class="text-xs tracking-[0.2em] uppercase text-gold-500/80 mb-4">Tools</p>
+                    <h2 class="text-3xl md:text-4xl font-serif font-light mb-4 text-surface-900">
+                        实用工具推荐
+                    </h2>
+                    <p class="text-surface-600 text-sm max-w-xl mx-auto font-light">精选实用在线工具，提升工作效率</p>
+                </div>
+                
+                <!-- 侧边栏内容 -->
+                <div class="grid lg:grid-cols-3 gap-10 lg:gap-12">
+                    <!-- 热门推荐 -->
+                    <div class="lg:col-span-2">
+                        <div class="bg-surface-100 border border-surface-200 rounded-sm p-8 md:p-10">
+                            <div class="flex items-center justify-between mb-8">
+                                <h3 class="text-lg font-serif font-light flex items-center gap-3 text-surface-900">
+                                    <svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M12 23c-4.97 0-9-2.58-9-6 0-2.11 1.19-3.98 3.04-5.27-.05-.59.41-1.11 1.03-1.11.51 0 .94.37 1.02.88.34 2.44 2.14 3.5 4.91 3.5 2.77 0 4.57-1.06 4.91-3.5.08-.51.51-.88 1.02-.88.62 0 1.08.52 1.03 1.11C19.81 13.02 21 14.89 21 17c0 3.42-4.03 6-9 6z"/></svg>
+                                    热门推荐
+                                </h3>
+                            </div>
+                            
+                            <div class="grid md:grid-cols-2 gap-6" id="hotSites">
+                                <!-- 热门网站将通过JS动态生成 -->
+                            </div>
+                        </div>
+                        
+                        <!-- 快速工具 -->
+                        <div class="mt-10 bg-surface-100 border border-surface-200 rounded-sm p-8 md:p-10">
+                            <h3 class="text-lg font-serif font-light mb-6 flex items-center gap-3 text-surface-900">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M11 21h-1l1-7H7.5c-.58 0-.57-.32-.38-.66.19-.34.05-.08.07-.12C8.48 10.94 10.42 7.54 13 3h1l-1 7h3.5c.49 0 .56.33.47.51l-.07.15C12.96 17.55 11 21 11 21z"/></svg>
+                                快速实用工具
+                            </h3>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <a href="https://tinypng.com" target="_blank" class="quick-tool-card">
+                                    <svg viewBox="0 0 24 24" class="w-5 h-5 text-gold-500/90 mb-2" fill="currentColor"><path d="M8 19h3v3h2v-3h3l-4-4-4 4zm8-15h-3V1h-2v3H8l4 4 4-4zM4 9v2h16V9H4z"/></svg>
+                                    <span class="text-sm text-surface-600">图片压缩</span>
+                                </a>
+                                <a href="https://tool.oschina.net" target="_blank" class="quick-tool-card">
+                                    <svg viewBox="0 0 24 24" class="w-5 h-5 text-gold-500/90 mb-2" fill="currentColor"><path d="M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z"/></svg>
+                                    <span class="text-sm text-surface-600">编码解码</span>
+                                </a>
+                                <a href="https://convertio.co/zh/" target="_blank" class="quick-tool-card">
+                                    <svg viewBox="0 0 24 24" class="w-5 h-5 text-gold-500/90 mb-2" fill="currentColor"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>
+                                    <span class="text-sm text-surface-600">格式转换</span>
+                                </a>
+                                <a href="https://www.iloveimg.com/zh-cn" target="_blank" class="quick-tool-card">
+                                    <svg viewBox="0 0 24 24" class="w-5 h-5 text-gold-500/90 mb-2" fill="currentColor"><path d="M22 16V4c0-1.1-.9-2-2-2H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2zm-11-4l2.03 2.71L16 11l4 5H8l3-4zM2 6v14c0 1.1.9 2 2 2h14v-2H4V6H2z"/></svg>
+                                    <span class="text-sm text-surface-600">图片处理</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 侧边栏 -->
+                    <div class="space-y-8">
+                        <!-- 今日推荐 -->
+                        <div class="bg-surface-100 border border-surface-200 rounded-sm p-8">
+                            <h3 class="text-lg font-serif font-light mb-6 flex items-center gap-3 text-surface-900">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M19 3H5L2 9l10 12L22 9l-3-6zM9.62 8l1.5-3h1.76l1.5 3H9.62zM11 10v6.51L5.51 10H11zM13 10h5.49L13 16.51V10zM3.21 9L5 4h4.12L7.5 9H3.21zM16.5 9L14.88 4H19l1.79 5h-4.29z"/></svg>
+                                特别推荐
+                            </h3>
+                            <div class="space-y-2">
+                                <a href="https://www.bilibili.com" target="_blank" class="daily-recommend-card">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded border border-surface-300 flex items-center justify-center">
+                                            <i class="fab fa-bilibili text-gold-500/90"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-light text-surface-900">哔哩哔哩</div>
+                                            <div class="text-xs text-surface-500">优质视频社区</div>
+                                        </div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" class="w-3 h-3 text-gold-500/90" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                </a>
+                                <a href="https://github.com" target="_blank" class="daily-recommend-card">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded border border-surface-300 flex items-center justify-center">
+                                            <i class="fab fa-github text-gold-500/90"></i>
+                                        </div>
+                                        <div>
+                                            <div class="font-light text-surface-900">GitHub</div>
+                                            <div class="text-xs text-surface-500">开源资源平台</div>
+                                        </div>
+                                    </div>
+                                    <svg viewBox="0 0 24 24" class="w-3 h-3 text-gold-500/90" fill="currentColor"><path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"/></svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 关于区域 -->
+        <section id="about" class="py-24 md:py-32 border-t border-surface-200/30">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+                <div class="max-w-4xl mx-auto">
+                    <div class="text-center mb-16">
+                        <p class="text-xs tracking-[0.2em] uppercase text-gold-500/80 mb-4">About</p>
+                        <h2 class="text-3xl md:text-4xl font-serif font-light mb-4 text-surface-900">关于知行导航</h2>
+                        <p class="text-surface-600 text-sm max-w-xl mx-auto font-light">专注收集整理全网优质资源</p>
+                    </div>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div class="bg-surface-100 border border-surface-200 rounded-sm p-8">
+                            <h3 class="text-lg font-serif font-light mb-6 flex items-center gap-3 text-surface-900">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>关于知行
+                            </h3>
+                            <p class="text-surface-600 text-sm leading-relaxed font-light mb-4">专注收集整理全网优质娱乐、生活、效率类实用网址，打造个人专属实用导航站。</p>
+                            <div class="space-y-3 pt-4 border-t border-surface-200">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded border border-surface-300 flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
+                                    <div><div class="font-light text-surface-800 text-sm">兴趣方向</div><div class="text-xs text-surface-500">娱乐·生活·分享</div></div>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded border border-surface-300 flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6zm0 10c-2.21 0-4-1.79-4-4s1.79-4 4-4 4 1.79 4 4-1.79 4-4 4z"/></svg></div>
+                                    <div><div class="font-light text-surface-800 text-sm">擅长领域</div><div class="text-xs text-surface-500">发掘优质资源</div></div>
+                                </div>
+                            </div>
+                            <div class="mt-8 pt-6 border-t border-surface-200">
+                                <div class="flex gap-3">
+                                    <a href="https://space.bilibili.com/1474060600" target="_blank" class="w-10 h-10 rounded border border-surface-300 flex items-center justify-center text-gold-500/90 hover:border-gold-500/50 hover:text-gold-500 transition-colors"><i class="fab fa-bilibili"></i></a>
+                                    <a href="https://github.com/PaleSquire71029" target="_blank" class="w-10 h-10 rounded border border-surface-300 flex items-center justify-center text-gold-500/90 hover:border-gold-500/50 hover:text-gold-500 transition-colors"><i class="fab fa-github"></i></a>
+                                    <a href="https://www.youtube.com/@ccc-lc3ct" target="_blank" class="w-10 h-10 rounded border border-surface-300 flex items-center justify-center text-gold-500/90 hover:border-gold-500/50 hover:text-gold-500 transition-colors"><i class="fab fa-youtube"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-surface-100 border border-surface-200 rounded-sm p-8">
+                            <h3 class="text-lg font-serif font-light mb-6 flex items-center gap-3 text-surface-900">
+                                <svg viewBox="0 0 24 24" class="w-4 h-4 text-gold-500/90" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>项目介绍
+                            </h3>
+                            <p class="text-surface-600 text-sm leading-relaxed font-light mb-4">知行导航是一个个人项目，旨在收集和整理全网优质、实用的网站资源。</p>
+                            <div class="space-y-2">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded border border-surface-400 flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3 h-3 text-gold-500/90" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                    <span class="text-surface-600 text-sm font-light">人工筛选，保证质量</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded border border-surface-400 flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3 h-3 text-gold-500/90" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                    <span class="text-surface-600 text-sm font-light">分类清晰，查找方便</span>
+                                </div>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-6 h-6 rounded border border-surface-400 flex items-center justify-center"><svg viewBox="0 0 24 24" class="w-3 h-3 text-gold-500/90" fill="currentColor"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg></div>
+                                    <span class="text-surface-600 text-sm font-light">持续更新，与时俱进</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="border-t border-surface-200/50 pt-16 pb-12">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-6xl">
+            <div class="grid md:grid-cols-4 gap-12 mb-16">
+                <div>
+                    <div class="flex items-center gap-3 mb-6">
+                        <div class="w-9 h-9 rounded border border-surface-300 flex items-center justify-center">
+                            <svg viewBox="0 0 24 24" class="w-5 h-5 text-gold-500/90" fill="currentColor"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+                        </div>
+                        <div>
+                            <div class="text-base font-serif font-light text-surface-900">知行导航</div>
+                            <div class="text-[10px] text-surface-500 tracking-widest uppercase">知行合一 · 止于至善</div>
+                        </div>
+                    </div>
+                    <p class="text-surface-500 text-xs leading-relaxed font-light">
+                        收集优质资源，分享实用网址
+                    </p>
+                </div>
+                <div>
+                    <h4 class="font-light text-surface-700 text-sm mb-6 tracking-wider uppercase">快速链接</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#home" class="footer-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">首页</a></li>
+                        <li><a href="#websites" class="footer-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">网址合集</a></li>
+                        <li><a href="#tools" class="footer-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">实用工具</a></li>
+                        <li><a href="#about" class="footer-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">关于</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-light text-surface-700 text-sm mb-6 tracking-wider uppercase">资源分类</h4>
+                    <ul class="space-y-3">
+                        <li><a href="#websites" data-category="entertainment" class="footer-link category-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">娱乐休闲</a></li>
+                        <li><a href="#websites" data-category="life" class="footer-link category-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">生活服务</a></li>
+                        <li><a href="#websites" data-category="tools" class="footer-link category-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">效率工具</a></li>
+                        <li><a href="#websites" data-category="game" class="footer-link category-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">游戏</a></li>
+                        <li><a href="#websites" data-category="learning" class="footer-link category-link text-surface-500 text-sm font-light hover:text-gold-500 transition-colors">学习资源</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-light text-surface-700 text-sm mb-6 tracking-wider uppercase">联系</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-gold-500/90" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                            <span class="text-surface-500 text-xs font-light">palesquire71029@qq.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-surface-200/50 text-center">
+                <p class="text-surface-500 text-xs font-light">
+                    © 2026 逐浪的红叶
+                </p>
+                <p class="text-surface-600 text-[10px] mt-2 font-light">
+                    本网站由AI生成，所有资源仅供参考
+                </p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 网站数据 - 200+个国内可访问的网址（原150个+新增50个） -->
+    <script>
+        const websites = [
+            // ========== 原有150个网站（完整保留） ==========
+            // 娱乐休闲 (30个)
+            { name: "哔哩哔哩", url: "https://www.bilibili.com", icon: "fab fa-bilibili", color: "text-pink-500", bg: "bg-pink-100", desc: "二次元视频社区", category: "entertainment", hot: true },
+            { name: "网易云音乐", url: "https://music.163.com", icon: "fas fa-music", color: "text-red-500", bg: "bg-red-100", desc: "高品质音乐平台", category: "entertainment", hot: true },
+            { name: "QQ音乐", url: "https://y.qq.com", icon: "fas fa-headphones", color: "text-green-500", bg: "bg-green-100", desc: "腾讯音乐平台", category: "entertainment" },
+            { name: "酷狗音乐", url: "https://www.kugou.com", icon: "fas fa-volume-up", color: "text-blue-500", bg: "bg-blue-100", desc: "音乐播放器", category: "entertainment" },
+            { name: "酷我音乐", url: "https://www.kuwo.cn", icon: "fas fa-music", color: "text-purple-500", bg: "bg-purple-100", desc: "音乐平台", category: "entertainment" },
+            { name: "芒果TV", url: "https://www.mgtv.com", icon: "fas fa-tv", color: "text-orange-500", bg: "bg-orange-100", desc: "湖南卫视视频平台", category: "entertainment" },
+            { name: "爱奇艺", url: "https://www.iqiyi.com", icon: "fas fa-play", color: "text-blue-500", bg: "bg-blue-100", desc: "视频流媒体", category: "entertainment", hot: true },
+            { name: "腾讯视频", url: "https://v.qq.com", icon: "fab fa-tencent-weibo", color: "text-blue-600", bg: "bg-blue-100", desc: "腾讯视频平台", category: "entertainment" },
+            { name: "优酷", url: "https://www.youku.com", icon: "fas fa-film", color: "text-red-500", bg: "bg-red-100", desc: "视频分享平台", category: "entertainment" },
+            { name: "豆瓣", url: "https://www.douban.com", icon: "fas fa-book-open", color: "text-blue-500", bg: "bg-blue-100", desc: "影评书评社区", category: "entertainment" },
+            { name: "知乎", url: "https://www.zhihu.com", icon: "fab fa-zhihu", color: "text-blue-600", bg: "bg-blue-100", desc: "问答分享社区", category: "entertainment", hot: true },
+            { name: "小红书", url: "https://www.xiaohongshu.com", icon: "fas fa-heart", color: "text-red-500", bg: "bg-red-100", desc: "生活方式社区", category: "entertainment", hot: true },
+            { name: "斗鱼直播", url: "https://www.douyu.com", icon: "fas fa-video", color: "text-orange-500", bg: "bg-orange-100", desc: "游戏直播平台", category: "entertainment" },
+            { name: "虎牙直播", url: "https://www.huya.com", icon: "fas fa-gamepad", color: "text-yellow-600", bg: "bg-yellow-100", desc: "游戏直播平台", category: "entertainment" },
+            { name: "YY直播", url: "https://www.yy.com", icon: "fas fa-broadcast-tower", color: "text-purple-500", bg: "bg-purple-100", desc: "直播平台", category: "entertainment" },
+            { name: "快手", url: "https://www.kuaishou.com", icon: "fas fa-rocket", color: "text-red-600", bg: "bg-red-100", desc: "短视频平台", category: "entertainment", hot: true },
+            { name: "抖音", url: "https://www.douyin.com", icon: "fab fa-tiktok", color: "text-black", bg: "bg-gray-100", desc: "短视频平台", category: "entertainment", hot: true },
+            { name: "搜狐视频", url: "https://tv.sohu.com", icon: "fas fa-desktop", color: "text-orange-600", bg: "bg-orange-100", desc: "视频平台", category: "entertainment" },
+            { name: "乐视视频", url: "https://www.le.com", icon: "fas fa-play-circle", color: "text-red-500", bg: "bg-red-100", desc: "视频平台", category: "entertainment" },
+            { name: "央视网", url: "https://www.cctv.com", icon: "fas fa-tv", color: "text-blue-700", bg: "bg-blue-100", desc: "中央电视台", category: "entertainment" },
+            { name: "凤凰视频", url: "https://v.ifeng.com", icon: "fas fa-phoenix-framework", color: "text-red-600", bg: "bg-red-100", desc: "凤凰卫视视频", category: "entertainment" },
+            { name: "风行视频", url: "https://www.fun.tv", icon: "fas fa-wind", color: "text-green-600", bg: "bg-green-100", desc: "视频平台", category: "entertainment" },
+            { name: "AcFun", url: "https://www.acfun.cn", icon: "fas fa-play-circle", color: "text-orange-500", bg: "bg-orange-100", desc: "弹幕视频网站", category: "entertainment" },
+            { name: "猫眼电影", url: "https://www.maoyan.com", icon: "fas fa-ticket-alt", color: "text-yellow-600", bg: "bg-yellow-100", desc: "电影票务平台", category: "entertainment" },
+            { name: "淘票票", url: "https://www.taopiaopiao.com", icon: "fas fa-ticket-alt", color: "text-orange-500", bg: "bg-orange-100", desc: "电影票务平台", category: "entertainment" },
+            { name: "大麦网", url: "https://www.damai.cn", icon: "fas fa-concert", color: "text-red-600", bg: "bg-red-100", desc: "演出票务平台", category: "entertainment" },
+            { name: "喜马拉雅", url: "https://www.ximalaya.com", icon: "fas fa-podcast", color: "text-purple-500", bg: "bg-purple-100", desc: "音频分享平台", category: "entertainment" },
+            { name: "蜻蜓FM", url: "https://www.qingting.fm", icon: "fas fa-microphone-alt", color: "text-green-500", bg: "bg-green-100", desc: "网络音频平台", category: "entertainment" },
+            { name: "咪咕音乐", url: "https://music.migu.cn", icon: "fas fa-headphones-alt", color: "text-red-500", bg: "bg-red-100", desc: "中国移动音乐平台", category: "entertainment" },
+            { name: "腾讯动漫", url: "https://ac.qq.com", icon: "fas fa-book", color: "text-blue-500", bg: "bg-blue-100", desc: "动漫阅读平台", category: "entertainment" },
+            
+            // 生活服务 (40个)
+            { name: "美团点评", url: "https://www.meituan.com", icon: "fas fa-utensils", color: "text-yellow-600", bg: "bg-yellow-100", desc: "本地生活服务", category: "life", hot: true },
+            { name: "饿了么", url: "https://www.ele.me", icon: "fas fa-motorcycle", color: "text-blue-500", bg: "bg-blue-100", desc: "外卖订餐服务", category: "life", hot: true },
+            { name: "滴滴出行", url: "https://www.didiglobal.com", icon: "fas fa-taxi", color: "text-orange-500", bg: "bg-orange-100", desc: "出行叫车平台", category: "life", hot: true },
+            { name: "58同城", url: "https://www.58.com", icon: "fas fa-home", color: "text-blue-600", bg: "bg-blue-100", desc: "本地生活信息", category: "life" },
+            { name: "大众点评", url: "https://www.dianping.com", icon: "fas fa-star", color: "text-red-500", bg: "bg-red-100", desc: "餐饮娱乐评价", category: "life" },
+            { name: "淘宝", url: "https://www.taobao.com", icon: "fas fa-shopping-cart", color: "text-orange-500", bg: "bg-orange-100", desc: "综合购物平台", category: "life", hot: true },
+            { name: "京东", url: "https://www.jd.com", icon: "fas fa-shopping-bag", color: "text-red-600", bg: "bg-red-100", desc: "自营电商平台", category: "life", hot: true },
+            { name: "拼多多", url: "https://www.pinduoduo.com", icon: "fas fa-gem", color: "text-green-600", bg: "bg-green-100", desc: "社交电商平台", category: "life", hot: true },
+            { name: "苏宁易购", url: "https://www.suning.com", icon: "fas fa-store", color: "text-blue-500", bg: "bg-blue-100", desc: "家电零售平台", category: "life" },
+            { name: "唯品会", url: "https://www.vip.com", icon: "fas fa-tag", color: "text-pink-500", bg: "bg-pink-100", desc: "特卖电商平台", category: "life" },
+            { name: "考拉海购", url: "https://www.kaola.com", icon: "fas fa-ship", color: "text-blue-600", bg: "bg-blue-100", desc: "跨境电商平台", category: "life" },
+            { name: "携程", url: "https://www.ctrip.com", icon: "fas fa-plane", color: "text-blue-500", bg: "bg-blue-100", desc: "在线旅游服务", category: "life" },
+            { name: "飞猪", url: "https://www.fliggy.com", icon: "fas fa-hotel", color: "text-orange-600", bg: "bg-orange-100", desc: "旅游度假平台", category: "life" },
+            { name: "去哪儿", url: "https://www.qunar.com", icon: "fas fa-search-location", color: "text-green-600", bg: "bg-green-100", desc: "旅游搜索平台", category: "life" },
+            { name: "马蜂窝", url: "https://www.mafengwo.cn", icon: "fas fa-bee", color: "text-yellow-600", bg: "bg-yellow-100", desc: "旅游攻略社区", category: "life" },
+            { name: "途牛旅游网", url: "https://www.tuniu.com", icon: "fas fa-route", color: "text-blue-600", bg: "bg-blue-100", desc: "旅游预订平台", category: "life" },
+            { name: "同程旅行", url: "https://www.ly.com", icon: "fas fa-umbrella-beach", color: "text-green-500", bg: "bg-green-100", desc: "旅游预订平台", category: "life" },
+            { name: "百度地图", url: "https://map.baidu.com", icon: "fas fa-map-location-dot", color: "text-blue-500", bg: "bg-blue-100", desc: "出行导航必备", category: "life", hot: true },
+            { name: "高德地图", url: "https://www.amap.com", icon: "fas fa-map-marked-alt", color: "text-green-500", bg: "bg-green-100", desc: "导航地图服务", category: "life", hot: true },
+            { name: "腾讯地图", url: "https://map.qq.com", icon: "fas fa-map", color: "text-blue-600", bg: "bg-blue-100", desc: "地图服务", category: "life" },
+            { name: "12306", url: "https://www.12306.cn", icon: "fas fa-train", color: "text-blue-600", bg: "bg-blue-100", desc: "铁路购票平台", category: "life" },
+            { name: "航班管家", url: "https://www.133.cn", icon: "fas fa-plane-departure", color: "text-blue-500", bg: "bg-blue-100", desc: "航班查询预订", category: "life" },
+            { name: "航旅纵横", url: "https://www.umetrip.com", icon: "fas fa-plane-arrival", color: "text-purple-500", bg: "bg-purple-100", desc: "航班动态查询", category: "life" },
+            { name: "汽车之家", url: "https://www.autohome.com.cn", icon: "fas fa-car", color: "text-orange-600", bg: "bg-orange-100", desc: "汽车资讯平台", category: "life" },
+            { name: "易车网", url: "https://www.bitauto.com", icon: "fas fa-car-side", color: "text-blue-600", bg: "bg-blue-100", desc: "汽车资讯平台", category: "life" },
+            { name: "懂车帝", url: "https://www.dongchedi.com", icon: "fas fa-car-alt", color: "text-red-600", bg: "bg-red-100", desc: "汽车资讯平台", category: "life" },
+            { name: "安居客", url: "https://www.anjuke.com", icon: "fas fa-building", color: "text-green-600", bg: "bg-green-100", desc: "房产信息平台", category: "life" },
+            { name: "链家", url: "https://www.lianjia.com", icon: "fas fa-home", color: "text-blue-600", bg: "bg-blue-100", desc: "房产交易平台", category: "life" },
+            { name: "贝壳找房", url: "https://www.ke.com", icon: "fas fa-search", color: "text-green-600", bg: "bg-green-100", desc: "房产信息平台", category: "life" },
+            { name: "58到家", url: "https://www.58daojia.com", icon: "fas fa-hands-helping", color: "text-orange-500", bg: "bg-orange-100", desc: "家政服务平台", category: "life" },
+            { name: "美团跑腿", url: "https://paotui.meituan.com", icon: "fas fa-running", color: "text-yellow-600", bg: "bg-yellow-100", desc: "同城跑腿服务", category: "life" },
+            { name: "滴滴代驾", url: "https://daijia.didiglobal.com", icon: "fas fa-car", color: "text-orange-500", bg: "bg-orange-100", desc: "代驾服务", category: "life" },
+            { name: "曹操出行", url: "https://www.caocao.com", icon: "fas fa-car", color: "text-blue-700", bg: "bg-blue-100", desc: "网约车平台", category: "life" },
+            { name: "神州专车", url: "https://www.10101111.com", icon: "fas fa-car", color: "text-red-600", bg: "bg-red-100", desc: "专车服务平台", category: "life" },
+            { name: "首汽约车", url: "https://www.shouqiev.com", icon: "fas fa-car", color: "text-blue-600", bg: "bg-blue-100", desc: "网约车平台", category: "life" },
+            { name: "货拉拉", url: "https://www.huolala.cn", icon: "fas fa-truck", color: "text-orange-600", bg: "bg-orange-100", desc: "货运服务平台", category: "life" },
+            { name: "快狗打车", url: "https://www.kuaigou.com", icon: "fas fa-truck-moving", color: "text-yellow-600", bg: "bg-yellow-100", desc: "货运服务平台", category: "life" },
+            { name: "顺丰速运", url: "https://www.sf-express.com", icon: "fas fa-shipping-fast", color: "text-red-500", bg: "bg-red-100", desc: "快递物流服务", category: "life" },
+            { name: "中通快递", url: "https://www.zto.com", icon: "fas fa-truck", color: "text-blue-600", bg: "bg-blue-100", desc: "快递物流服务", category: "life" },
+            { name: "圆通速递", url: "https://www.yto.net.cn", icon: "fas fa-truck", color: "text-green-600", bg: "bg-green-100", desc: "快递物流服务", category: "life" },
+            { name: "申通快递", url: "https://www.sto.cn", icon: "fas fa-truck", color: "text-orange-600", bg: "bg-orange-100", desc: "快递物流服务", category: "life" },
+            { name: "韵达快递", url: "https://www.yundaex.com", icon: "fas fa-truck", color: "text-yellow-600", bg: "bg-yellow-100", desc: "快递物流服务", category: "life" },
+            { name: "邮政EMS", url: "https://www.ems.com.cn", icon: "fas fa-mail-bulk", color: "text-green-700", bg: "bg-green-100", desc: "邮政快递服务", category: "life" },
+            { name: "菜鸟裹裹", url: "https://www.cainiao.com", icon: "fas fa-box", color: "text-orange-500", bg: "bg-orange-100", desc: "快递查询平台", category: "life" },
+            { name: "快递100", url: "https://www.kuaidi100.com", icon: "fas fa-search", color: "text-blue-500", bg: "bg-blue-100", desc: "快递查询平台", category: "life" },
+            { name: "国家政务服务平台", url: "https://www.gjzwfw.gov.cn", icon: "fas fa-landmark", color: "text-blue-700", bg: "bg-blue-100", desc: "政务服务", category: "life" },
+            { name: "个人所得税APP", url: "https://www.etax.chinatax.gov.cn", icon: "fas fa-file-invoice-dollar", color: "text-green-600", bg: "bg-green-100", desc: "个税申报平台", category: "life" },
+            { name: "社保查询平台", url: "https://si.12333.gov.cn", icon: "fas fa-file-medical", color: "text-blue-600", bg: "bg-blue-100", desc: "社保查询服务", category: "life" },
+            
+            // 效率工具 (40个)
+            { name: "GitHub", url: "https://github.com", icon: "fab fa-github", color: "text-gray-800", bg: "bg-gray-100", desc: "开源代码托管", category: "tools", hot: true },
+            { name: "Notion", url: "https://www.notion.so", icon: "fas fa-clipboard-list", color: "text-gray-700", bg: "bg-gray-100", desc: "全能工作台", category: "tools", hot: true },
+            { name: "DeepL", url: "https://www.deepl.com", icon: "fas fa-language", color: "text-blue-500", bg: "bg-blue-100", desc: "AI翻译工具", category: "tools", hot: true },
+            { name: "Canva", url: "https://www.canva.com", icon: "fas fa-palette", color: "text-blue-600", bg: "bg-blue-100", desc: "在线设计平台", category: "tools" },
+            { name: "Trello", url: "https://trello.com", icon: "fas fa-columns", color: "text-blue-500", bg: "bg-blue-100", desc: "看板项目管理", category: "tools" },
+            { name: "石墨文档", url: "https://shimo.im", icon: "fas fa-file-alt", color: "text-green-600", bg: "bg-green-100", desc: "在线协作文档", category: "tools" },
+            { name: "腾讯文档", url: "https://docs.qq.com", icon: "fab fa-qq", color: "text-blue-600", bg: "bg-blue-100", desc: "在线办公套件", category: "tools" },
+            { name: "金山文档", url: "https://www.kdocs.cn", icon: "fas fa-file-word", color: "text-blue-500", bg: "bg-blue-100", desc: "WPS在线文档", category: "tools" },
+            { name: "语雀", url: "https://www.yuque.com", icon: "fas fa-feather-alt", color: "text-purple-500", bg: "bg-purple-100", desc: "知识创作平台", category: "tools" },
+            { name: "TinyPNG", url: "https://tinypng.com", icon: "fas fa-compress", color: "text-amber-400", bg: "bg-amber-500/20", desc: "图片无损压缩", category: "tools" },
+            { name: "Remove.bg", url: "https://remove.bg", icon: "fas fa-magic", color: "text-green-500", bg: "bg-green-100", desc: "AI抠图工具", category: "tools" },
+            { name: "Smallpdf", url: "https://smallpdf.com", icon: "fas fa-file-pdf", color: "text-red-500", bg: "bg-red-100", desc: "PDF处理工具", category: "tools" },
+            { name: "ProcessOn", url: "https://www.processon.com", icon: "fas fa-project-diagram", color: "text-green-600", bg: "bg-green-100", desc: "在线流程图工具", category: "tools" },
+            { name: "幕布", url: "https://mubu.com", icon: "fas fa-list-alt", color: "text-blue-600", bg: "bg-blue-100", desc: "思维导图工具", category: "tools" },
+            { name: "XMind", url: "https://www.xmind.cn", icon: "fas fa-brain", color: "text-purple-500", bg: "bg-purple-100", desc: "思维导图软件", category: "tools" },
+            { name: "CodePen", url: "https://codepen.io", icon: "fas fa-code", color: "text-black", bg: "bg-gray-100", desc: "前端代码展示平台", category: "tools" },
+            { name: "JSFiddle", url: "https://jsfiddle.net", icon: "fas fa-laptop-code", color: "text-blue-600", bg: "bg-blue-100", desc: "在线代码测试", category: "tools" },
+            { name: "CodeSandbox", url: "https://codesandbox.io", icon: "fas fa-sandbox", color: "text-yellow-600", bg: "bg-yellow-100", desc: "在线代码编辑器", category: "tools" },
+            { name: "Glitch", url: "https://glitch.com", icon: "fas fa-bolt", color: "text-purple-600", bg: "bg-purple-100", desc: "代码协作平台", category: "tools" },
+            { name: "Unsplash", url: "https://unsplash.com", icon: "fas fa-camera", color: "text-gray-700", bg: "bg-gray-100", desc: "免费高质量图片", category: "tools" },
+            { name: "Pexels", url: "https://www.pexels.com", icon: "fas fa-images", color: "text-green-600", bg: "bg-green-100", desc: "免费图库视频", category: "tools" },
+            { name: "Pixabay", url: "https://pixabay.com", icon: "fas fa-photo-video", color: "text-blue-500", bg: "bg-blue-100", desc: "免费图库资源", category: "tools" },
+            { name: "Iconfont", url: "https://www.iconfont.cn", icon: "fas fa-icons", color: "text-orange-500", bg: "bg-orange-100", desc: "阿里矢量图标库", category: "tools" },
+            { name: "Flaticon", url: "https://www.flaticon.com", icon: "fas fa-icons", color: "text-blue-500", bg: "bg-blue-100", desc: "免费图标库", category: "tools" },
+            { name: "Font Awesome", url: "https://fontawesome.com", icon: "fas fa-font", color: "text-blue-600", bg: "bg-blue-100", desc: "图标字体库", category: "tools" },
+            { name: "Google Fonts", url: "https://fonts.google.com", icon: "fas fa-font", color: "text-blue-500", bg: "bg-blue-100", desc: "免费字体库", category: "tools" },
+            { name: "Color Hunt", url: "https://colorhunt.co", icon: "fas fa-palette", color: "text-pink-500", bg: "bg-pink-100", desc: "配色方案平台", category: "tools" },
+            { name: "Coolors", url: "https://coolors.co", icon: "fas fa-palette", color: "text-purple-500", bg: "bg-purple-100", desc: "配色生成工具", category: "tools" },
+            { name: "CSS Gradient", url: "https://cssgradient.io", icon: "fas fa-fill-drip", color: "text-blue-500", bg: "bg-blue-100", desc: "CSS渐变生成器", category: "tools" },
+            { name: "JSON Formatter", url: "https://jsonformatter.org", icon: "fas fa-code", color: "text-gray-700", bg: "bg-gray-100", desc: "JSON格式化工具", category: "tools" },
+            { name: "JSONLint", url: "https://jsonlint.com", icon: "fas fa-check", color: "text-green-600", bg: "bg-green-100", desc: "JSON验证工具", category: "tools" },
+            { name: "Postman", url: "https://www.postman.com", icon: "fas fa-paper-plane", color: "text-orange-600", bg: "bg-orange-100", desc: "API开发测试工具", category: "tools" },
+            { name: "Swagger", url: "https://swagger.io", icon: "fas fa-file-code", color: "text-green-600", bg: "bg-green-100", desc: "API文档工具", category: "tools" },
+            { name: "GitLab", url: "https://gitlab.com", icon: "fab fa-gitlab", color: "text-orange-600", bg: "bg-orange-100", desc: "代码托管平台", category: "tools" },
+            { name: "Gitee", url: "https://gitee.com", icon: "fas fa-code-branch", color: "text-red-500", bg: "bg-red-100", desc: "国内代码托管", category: "tools" },
+            { name: "CODING", url: "https://coding.net", icon: "fas fa-cogs", color: "text-blue-500", bg: "bg-blue-100", desc: "一站式开发平台", category: "tools" },
+            { name: "Docker Hub", url: "https://hub.docker.com", icon: "fab fa-docker", color: "text-blue-500", bg: "bg-blue-100", desc: "容器镜像仓库", category: "tools" },
+            { name: "Vercel", url: "https://vercel.com", icon: "fas fa-bolt", color: "text-black", bg: "bg-gray-100", desc: "前端部署平台", category: "tools" },
+            { name: "Netlify", url: "https://www.netlify.com", icon: "fas fa-cloud-upload-alt", color: "text-green-600", bg: "bg-green-100", desc: "静态网站托管", category: "tools" },
+            { name: "Cloudflare", url: "https://www.cloudflare.com", icon: "fas fa-cloud", color: "text-orange-600", bg: "bg-orange-100", desc: "CDN与安全服务", category: "tools" },
+            
+            // 游戏 (20个)
+            { name: "原神", url: "https://ys.mihoyo.com", icon: "fas fa-globe-asia", color: "text-amber-500", bg: "bg-amber-100", desc: "开放世界冒险游戏", category: "game", hot: true },
+            { name: "崩坏：星穹铁道", url: "https://sr.mihoyo.com", icon: "fas fa-rocket", color: "text-purple-500", bg: "bg-purple-100", desc: "银河冒险RPG", category: "game", hot: true },
+            { name: "绝区零", url: "https://zzz.mihoyo.com", icon: "fas fa-bolt", color: "text-blue-500", bg: "bg-blue-100", desc: "都市幻想动作游戏", category: "game", hot: true },
+            { name: "明日方舟：终末地", url: "https://endfield.hypergryph.com/", icon: "fas fa-tower-observation", color: "text-green-500", bg: "bg-green-100", desc: "3D即时策略RPG", category: "game", hot: true },
+            { name: "Steam", url: "https://store.steampowered.com", icon: "fab fa-steam", color: "text-gray-800", bg: "bg-gray-100", desc: "游戏发行平台", category: "game", hot: true },
+            { name: "Epic Games", url: "https://www.epicgames.com", icon: "fas fa-gamepad", color: "text-gray-700", bg: "bg-gray-100", desc: "游戏平台", category: "game", hot: true },
+            { name: "SteamCN", url: "https://steamcn.com", icon: "fab fa-steam", color: "text-gray-800", bg: "bg-gray-100", desc: "Steam社区", category: "game" },
+            { name: "3DM游戏网", url: "https://www.3dmgame.com", icon: "fas fa-gamepad", color: "text-blue-500", bg: "bg-blue-100", desc: "游戏资讯网站", category: "game" },
+            { name: "游民星空", url: "https://www.gamersky.com", icon: "fas fa-star", color: "text-blue-600", bg: "bg-blue-100", desc: "游戏资讯网站", category: "game" },
+            { name: "游侠网", url: "https://www.ali213.net", icon: "fas fa-user-ninja", color: "text-green-600", bg: "bg-green-100", desc: "游戏资讯网站", category: "game" },
+            { name: "电玩巴士", url: "https://www.tgbus.com", icon: "fas fa-bus", color: "text-red-600", bg: "bg-red-100", desc: "游戏资讯网站", category: "game" },
+            { name: "多玩网游", url: "https://www.duowan.com", icon: "fas fa-play", color: "text-orange-500", bg: "bg-orange-100", desc: "游戏资讯网站", category: "game" },
+            { name: "17173网游", url: "https://www.17173.com", icon: "fas fa-gamepad", color: "text-blue-500", bg: "bg-blue-100", desc: "游戏资讯网站", category: "game" },
+            { name: "网易云游戏", url: "https://game.163.com", icon: "fas fa-gamepad", color: "text-red-500", bg: "bg-red-100", desc: "游戏平台", category: "game" },
+            { name: "腾讯游戏", url: "https://game.qq.com", icon: "fab fa-tencent-weibo", color: "text-blue-600", bg: "bg-blue-100", desc: "游戏平台", category: "game" },
+            { name: "完美世界电竞", url: "https://www.pwesports.cn", icon: "fas fa-trophy", color: "text-yellow-600", bg: "bg-yellow-100", desc: "电竞平台", category: "game" },
+            { name: "英雄联盟官网", url: "https://lol.qq.com", icon: "fas fa-fist-raised", color: "text-blue-700", bg: "bg-blue-100", desc: "英雄联盟官方", category: "game", hot: true },
+            { name: "王者荣耀官网", url: "https://pvp.qq.com", icon: "fas fa-crown", color: "text-orange-600", bg: "bg-orange-100", desc: "王者荣耀官方", category: "game", hot: true },
+            { name: "暴雪战网", url: "https://www.blizzard.com", icon: "fab fa-battle-net", color: "text-blue-600", bg: "bg-blue-100", desc: "暴雪游戏平台", category: "game" },
+            { name: "GOG", url: "https://www.gog.com", icon: "fas fa-gamepad", color: "text-purple-500", bg: "bg-purple-100", desc: "无DRM游戏平台", category: "game" },
+            { name: "Nexus Mods", url: "https://www.nexusmods.com", icon: "fas fa-puzzle-piece", color: "text-purple-600", bg: "bg-purple-100", desc: "游戏模组平台", category: "game" },
+            { name: "CurseForge", url: "https://www.curseforge.com", icon: "fas fa-hammer", color: "text-orange-600", bg: "bg-orange-100", desc: "游戏模组平台", category: "game" },
+            { name: "HowLongToBeat", url: "https://howlongtobeat.com", icon: "fas fa-clock", color: "text-blue-500", bg: "bg-blue-100", desc: "游戏时长统计", category: "game" },
+            { name: "TapTap", url: "https://www.taptap.com", icon: "fas fa-mobile-alt", color: "text-blue-500", bg: "bg-blue-100", desc: "手游社区平台", category: "game" },
+            
+            // 学习资源 (20个)
+            { name: "中国大学MOOC", url: "https://www.icourse163.org", icon: "fas fa-chalkboard-teacher", color: "text-red-500", bg: "bg-red-100", desc: "国内慕课平台", category: "learning", hot: true },
+            { name: "网易公开课", url: "https://open.163.com", icon: "fas fa-video", color: "text-red-600", bg: "bg-red-100", desc: "优质公开课", category: "learning" },
+            { name: "腾讯课堂", url: "https://ke.qq.com", icon: "fab fa-qq", color: "text-blue-500", bg: "bg-blue-100", desc: "在线学习平台", category: "learning" },
+            { name: "学堂在线", url: "https://www.xuetangx.com", icon: "fas fa-book-reader", color: "text-red-500", bg: "bg-red-100", desc: "清华慕课平台", category: "learning" },
+            { name: "得到", url: "https://www.igetget.com", icon: "fas fa-headphones", color: "text-blue-600", bg: "bg-blue-100", desc: "知识服务平台", category: "learning" },
+            { name: "知乎大学", url: "https://www.zhihu.com/education", icon: "fab fa-zhihu", color: "text-blue-600", bg: "bg-blue-100", desc: "知乎学习专区", category: "learning" },
+            { name: "B站课程", url: "https://www.bilibili.com/cheese", icon: "fab fa-bilibili", color: "text-pink-500", bg: "bg-pink-100", desc: "B站学习专区", category: "learning" },
+            { name: "菜鸟教程", url: "https://www.runoob.com", icon: "fas fa-book", color: "text-green-600", bg: "bg-green-100", desc: "编程入门教程", category: "learning" },
+            { name: "慕课网", url: "https://www.imooc.com", icon: "fas fa-video", color: "text-orange-600", bg: "bg-orange-100", desc: "IT技能学习平台", category: "learning" },
+            { name: "实验楼", url: "https://www.shiyanlou.com", icon: "fas fa-flask", color: "text-blue-500", bg: "bg-blue-100", desc: "IT实战学习平台", category: "learning" },
+            { name: "极客时间", url: "https://time.geekbang.org", icon: "fas fa-rocket", color: "text-green-600", bg: "bg-green-100", desc: "IT知识学习平台", category: "learning" },
+            { name: "掘金", url: "https://juejin.cn", icon: "fas fa-gem", color: "text-blue-600", bg: "bg-blue-100", desc: "开发者社区", category: "learning" },
+            { name: "CSDN", url: "https://www.csdn.net", icon: "fas fa-code", color: "text-red-500", bg: "bg-red-100", desc: "IT技术社区", category: "learning" },
+            { name: "开源中国", url: "https://www.oschina.net", icon: "fas fa-globe", color: "text-green-600", bg: "bg-green-100", desc: "开源技术社区", category: "learning" },
+            { name: "简书", url: "https://www.jianshu.com", icon: "fas fa-pen-fancy", color: "text-green-500", bg: "bg-green-100", desc: "创作社区", category: "learning" },
+            { name: "豆瓣读书", url: "https://book.douban.com", icon: "fas fa-book", color: "text-blue-500", bg: "bg-blue-100", desc: "图书评价社区", category: "learning" },
+            { name: "喜马拉雅听书", url: "https://www.ximalaya.com/ertong", icon: "fas fa-headphones", color: "text-purple-500", bg: "bg-purple-100", desc: "有声书平台", category: "learning" },
+            { name: "网易云课堂", url: "https://study.163.com", icon: "fas fa-graduation-cap", color: "text-red-500", bg: "bg-red-100", desc: "实用技能学习", category: "learning" },
+            { name: "腾讯大学", url: "https://daxue.qq.com", icon: "fab fa-qq", color: "text-blue-600", bg: "bg-blue-100", desc: "腾讯内部知识分享", category: "learning" },
+            { name: "百度传课", url: "https://chuanke.baidu.com", icon: "fab fa-baidu", color: "text-blue-500", bg: "bg-blue-100", desc: "百度在线教育", category: "learning" },
+            
+            // ========== 新增50个网站（开始） ==========
+            // 娱乐休闲新增10个
+            { name: "人民网", url: "https://www.people.com.cn", icon: "fas fa-newspaper", color: "text-red-600", bg: "bg-red-100", desc: "权威新闻门户", category: "entertainment" },
+            { name: "新华网", url: "https://www.xinhuanet.com", icon: "fas fa-newspaper", color: "text-blue-600", bg: "bg-blue-100", desc: "国家通讯社", category: "entertainment" },
+            { name: "澎湃新闻", url: "https://www.thepaper.cn", icon: "fas fa-newspaper", color: "text-red-500", bg: "bg-red-100", desc: "时政思想类互联网平台", category: "entertainment" },
+            { name: "观察者网", url: "https://www.guancha.cn", icon: "fas fa-eye", color: "text-blue-500", bg: "bg-blue-100", desc: "国际时政评论", category: "entertainment" },
+            { name: "腾讯新闻", url: "https://news.qq.com", icon: "fab fa-tencent-weibo", color: "text-blue-600", bg: "bg-blue-100", desc: "综合新闻资讯", category: "entertainment" },
+            { name: "新浪新闻", url: "https://news.sina.com.cn", icon: "fab fa-weibo", color: "text-red-500", bg: "bg-red-100", desc: "新闻资讯平台", category: "entertainment" },
+            { name: "搜狐新闻", url: "https://news.sohu.com", icon: "fas fa-dog", color: "text-orange-600", bg: "bg-orange-100", desc: "新闻资讯", category: "entertainment" },
+            { name: "网易新闻", url: "https://news.163.com", icon: "fab fa-netflix", color: "text-red-600", bg: "bg-red-100", desc: "有态度的新闻", category: "entertainment" },
+            { name: "今日头条", url: "https://www.toutiao.com", icon: "fas fa-heading", color: "text-red-500", bg: "bg-red-100", desc: "个性化资讯平台", category: "entertainment", hot: true },
+            { name: "微视", url: "https://weishi.qq.com", icon: "fas fa-video", color: "text-blue-500", bg: "bg-blue-100", desc: "腾讯短视频平台", category: "entertainment" },
+            
+            // 生活服务新增10个
+            { name: "瓜子二手车", url: "https://www.guazi.com", icon: "fas fa-car", color: "text-green-600", bg: "bg-green-100", desc: "二手车交易平台", category: "life" },
+            { name: "优信二手车", url: "https://www.xin.com", icon: "fas fa-car-side", color: "text-blue-500", bg: "bg-blue-100", desc: "二手车电商", category: "life" },
+            { name: "途虎养车", url: "https://www.tuhu.cn", icon: "fas fa-wrench", color: "text-orange-500", bg: "bg-orange-100", desc: "汽车养护服务", category: "life" },
+            { name: "京东到家", url: "https://daojia.jd.com", icon: "fas fa-bicycle", color: "text-red-600", bg: "bg-red-100", desc: "即时零售平台", category: "life" },
+            { name: "美团买菜", url: "https://maicai.meituan.com", icon: "fas fa-shopping-basket", color: "text-green-500", bg: "bg-green-100", desc: "生鲜电商", category: "life" },
+            { name: "盒马", url: "https://www.freshhema.com", icon: "fas fa-fish", color: "text-blue-500", bg: "bg-blue-100", desc: "新零售超市", category: "life", hot: true },
+            { name: "叮咚买菜", url: "https://www.100.me", icon: "fas fa-bell", color: "text-green-600", bg: "bg-green-100", desc: "生鲜配送", category: "life" },
+            { name: "每日优鲜", url: "https://www.missfresh.cn", icon: "fas fa-seedling", color: "text-green-500", bg: "bg-green-100", desc: "生鲜电商", category: "life" },
+            { name: "京东物流", url: "https://www.jdl.com", icon: "fas fa-truck", color: "text-red-500", bg: "bg-red-100", desc: "物流服务", category: "life" },
+            { name: "德邦快递", url: "https://www.deppon.com", icon: "fas fa-box-open", color: "text-blue-600", bg: "bg-blue-100", desc: "大件快递", category: "life" },
+            
+            // 效率工具新增10个
+            { name: "36氪", url: "https://www.36kr.com", icon: "fas fa-lightbulb", color: "text-blue-500", bg: "bg-blue-100", desc: "科技商业媒体", category: "tools", hot: true },
+            { name: "虎嗅网", url: "https://www.huxiu.com", icon: "fas fa-paw", color: "text-orange-600", bg: "bg-orange-100", desc: "商业科技资讯", category: "tools" },
+            { name: "少数派", url: "https://sspai.com", icon: "fas fa-rocket", color: "text-purple-500", bg: "bg-purple-100", desc: "数字消费指南", category: "tools" },
+            { name: "产品经理", url: "https://www.woshipm.com", icon: "fas fa-user-tie", color: "text-green-600", bg: "bg-green-100", desc: "产品学习社区", category: "tools" },
+            { name: "运营派", url: "https://www.yunyingpai.com", icon: "fas fa-chart-line", color: "text-blue-600", bg: "bg-blue-100", desc: "运营学习平台", category: "tools" },
+            { name: "思否", url: "https://segmentfault.com", icon: "fas fa-code", color: "text-green-500", bg: "bg-green-100", desc: "技术问答社区", category: "tools" },
+            { name: "博客园", url: "https://www.cnblogs.com", icon: "fas fa-leaf", color: "text-green-600", bg: "bg-green-100", desc: "开发者博客", category: "tools" },
+            { name: "Linux中国", url: "https://linux.cn", icon: "fab fa-linux", color: "text-gray-800", bg: "bg-gray-100", desc: "Linux技术社区", category: "tools" },
+            { name: "极客公园", url: "https://www.geekpark.net", icon: "fas fa-flask", color: "text-blue-500", bg: "bg-blue-100", desc: "科技媒体", category: "tools" },
+            { name: "IT之家", url: "https://www.ithome.com", icon: "fas fa-laptop", color: "text-blue-600", bg: "bg-blue-100", desc: "IT资讯平台", category: "tools", hot: true },
+            
+            // 游戏新增10个
+            { name: "机核网", url: "https://www.gcores.com", icon: "fas fa-headset", color: "text-red-500", bg: "bg-red-100", desc: "游戏文化媒体", category: "game" },
+            { name: "游研社", url: "https://www.yystv.cn", icon: "fas fa-flask", color: "text-purple-500", bg: "bg-purple-100", desc: "游戏研究社", category: "game" },
+            { name: "游久网", url: "https://www.uuu9.com", icon: "fas fa-clock", color: "text-blue-500", bg: "bg-blue-100", desc: "游戏资讯", category: "game" },
+            { name: "叶子猪", url: "https://www.yzz.cn", icon: "fas fa-leaf", color: "text-green-600", bg: "bg-green-100", desc: "游戏门户", category: "game" },
+            { name: "178游戏网", url: "https://www.178.com", icon: "fas fa-gamepad", color: "text-orange-600", bg: "bg-orange-100", desc: "游戏综合站", category: "game" },
+            { name: "新浪游戏", url: "https://games.sina.com.cn", icon: "fab fa-weibo", color: "text-red-500", bg: "bg-red-100", desc: "新浪旗下游戏频道", category: "game" },
+            { name: "网易游戏", url: "https://game.163.com", icon: "fas fa-dragon", color: "text-red-600", bg: "bg-red-100", desc: "网易游戏官网", category: "game" },
+            { name: "完美世界", url: "https://www.wanmei.com", icon: "fas fa-globe", color: "text-blue-500", bg: "bg-blue-100", desc: "完美世界游戏", category: "game" },
+            { name: "哔哩哔哩游戏", url: "https://game.bilibili.com", icon: "fab fa-bilibili", color: "text-pink-500", bg: "bg-pink-100", desc: "B站游戏中心", category: "game" },
+            { name: "好游快爆", url: "https://www.3839.com", icon: "fas fa-bolt", color: "text-yellow-600", bg: "bg-yellow-100", desc: "手游推荐平台", category: "game", hot: true },
+            
+            // 学习资源新增10个
+            { name: "中国教育在线", url: "https://www.eol.cn", icon: "fas fa-graduation-cap", color: "text-blue-600", bg: "bg-blue-100", desc: "教育资讯门户", category: "learning" },
+            { name: "51CTO", url: "https://www.51cto.com", icon: "fas fa-code", color: "text-orange-600", bg: "bg-orange-100", desc: "IT技术学习", category: "learning", hot: true },
+            { name: "蓝桥云课", url: "https://www.lanqiao.cn", icon: "fas fa-laptop-code", color: "text-blue-500", bg: "bg-blue-100", desc: "IT在线实训", category: "learning" },
+            { name: "麦子学院", url: "https://www.maiziedu.com", icon: "fas fa-seedling", color: "text-green-500", bg: "bg-green-100", desc: "设计/IT课程", category: "learning" },
+            { name: "混沌大学", url: "https://www.hundun.cn", icon: "fas fa-brain", color: "text-purple-500", bg: "bg-purple-100", desc: "创新商业教育", category: "learning" },
+            { name: "樊登读书", url: "https://www.dushu.io", icon: "fas fa-book-reader", color: "text-yellow-600", bg: "bg-yellow-100", desc: "听书学习", category: "learning" },
+            { name: "微信读书", url: "https://weread.qq.com", icon: "fab fa-weixin", color: "text-green-600", bg: "bg-green-100", desc: "社交阅读", category: "learning", hot: true },
+            { name: "多看阅读", url: "https://www.duokan.com", icon: "fas fa-book-open", color: "text-blue-500", bg: "bg-blue-100", desc: "电子书阅读", category: "learning" },
+            { name: "当当读书", url: "https://e.dangdang.com", icon: "fas fa-shopping-cart", color: "text-red-500", bg: "bg-red-100", desc: "电子书平台", category: "learning" },
+            { name: "网易蜗牛读书", url: "https://du.163.com", icon: "fas fa-snail", color: "text-green-500", bg: "bg-green-100", desc: "领读平台", category: "learning" }
+            // ========== 新增50个网站（结束） ==========
+        ];
+    </script>
+
+    <!-- 主JS代码 -->
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('页面加载完成，开始初始化...');
+            
+            // 移除骨架屏
+            setTimeout(() => {
+                const skeleton = document.getElementById('skeleton');
+                if (skeleton) {
+                    skeleton.style.display = 'none';
+                    console.log('骨架屏已移除');
+                }
+            }, 500);
+            
+            // 初始化所有组件
+            initClock();
+            initNavigation();
+            initNewSearch(); // 初始化新搜索框
+            initWebsiteGrid();
+            initHotSites();
+            initRandomSite();
+            initCategoryFilter();
+            initLoadMore();
+            initNewTabButton();
+            
+            // 添加Tailwind类
+            addTailwindClasses();
+            
+            console.log('所有功能初始化完成！');
+        });
+        
+        function addTailwindClasses() {
+            console.log('添加Tailwind样式类...');
+            
+            // 统计卡片
+            const statCardClasses = "bg-surface-100 border border-surface-200 rounded-sm p-6 text-center hover:border-gold-500/30 transition-all duration-300";
+            
+            // 分类标签
+            const categoryTabClasses = "px-5 py-2 rounded-sm border border-surface-300 text-surface-600 hover:border-gold-500/50 hover:text-gold-500 transition-all font-light text-sm";
+            const activeCategoryTabClasses = "px-5 py-2 rounded-sm bg-transparent border border-gold-500/60 text-gold-500 font-light text-sm";
+            
+            // 快速工具卡片
+            const quickToolCardClasses = "flex flex-col items-center justify-center bg-surface-100 border border-surface-200 rounded-sm p-5 hover:border-gold-500/30 transition-all duration-300 text-center";
+            
+            // 每日推荐卡片
+            const dailyRecommendCardClasses = "flex items-center justify-between p-4 rounded-sm border border-surface-200 hover:border-gold-500/30 transition-all duration-300";
+            
+            // 社交按钮
+            const socialBtnClasses = "w-10 h-10 rounded border border-surface-300 flex items-center justify-center text-surface-600 hover:border-gold-500/50 hover:text-gold-500 transition-colors";
+            
+            // 页脚链接
+            const footerLinkClasses = "text-surface-500 hover:text-gold-500 transition-colors";
+            
+            // 应用样式类到元素
+            try {
+                document.querySelectorAll('.stat-card').forEach(el => {
+                    el.className = statCardClasses;
+                });
+                
+                document.querySelectorAll('.category-tab').forEach(el => {
+                    el.className = el.classList.contains('active') ? activeCategoryTabClasses : categoryTabClasses;
+                });
+                
+                document.querySelectorAll('.quick-tool-card').forEach(el => {
+                    el.className = quickToolCardClasses;
+                });
+                
+                document.querySelectorAll('.daily-recommend-card').forEach(el => {
+                    el.className = dailyRecommendCardClasses;
+                });
+                
+                document.querySelectorAll('.social-btn').forEach(el => {
+                    el.className = socialBtnClasses;
+                });
+                
+                document.querySelectorAll('.footer-link').forEach(el => {
+                    el.className = footerLinkClasses;
+                });
+                
+                // 添加点击事件到页脚分类链接
+                document.querySelectorAll('.category-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        const category = this.getAttribute('data-category');
+                        const tabs = document.querySelectorAll('.category-tab');
+                        tabs.forEach(tab => {
+                            if(tab.getAttribute('data-category') === category) {
+                                tab.click();
+                            }
+                        });
+                        document.getElementById('websites').scrollIntoView({ behavior: 'smooth' });
+                    });
+                });
+                
+                console.log('Tailwind样式类添加完成');
+            } catch (error) {
+                console.error('添加Tailwind样式类时出错:', error);
+            }
+        }
+        
+        // 时钟功能
+        function initClock() {
+            console.log('初始化时钟功能...');
+            
+            function updateClock() {
+                const now = new Date();
+                const weekDays = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'];
+                const dateStr = `${now.getFullYear()}.${(now.getMonth()+1).toString().padStart(2, '0')}.${now.getDate().toString().padStart(2, '0')} ${weekDays[now.getDay()]}`;
+                const timeStr = `${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}:${now.getSeconds().toString().padStart(2, '0')}`;
+                
+                try {
+                    const clockEl = document.getElementById('clock');
+                    const mobileClockEl = document.getElementById('mobileClock');
+                    
+                    if (clockEl) {
+                        clockEl.textContent = `${dateStr} ${timeStr}`;
+                    }
+                    if (mobileClockEl) {
+                        mobileClockEl.textContent = `${dateStr} ${timeStr}`;
+                    }
+                } catch (error) {
+                    console.error('更新时钟时出错:', error);
+                }
+            }
+            
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            console.log('时钟功能初始化完成');
+        }
+        
+        // 导航交互
+        function initNavigation() {
+            console.log('初始化导航交互...');
+            
+            const navbar = document.getElementById('navbar');
+            const backToTop = document.getElementById('backToTop');
+            const navItems = document.querySelectorAll('.nav-item');
+            
+            // 导航栏滚动阴影
+            function updateNavbarShadow() {
+                if (window.scrollY > 20) {
+                    navbar.classList.add('shadow-md');
+                    if (backToTop) backToTop.classList.remove('hidden');
+                } else {
+                    navbar.classList.remove('shadow-md');
+                    if (backToTop) backToTop.classList.add('hidden');
+                }
+            }
+            
+            window.addEventListener('scroll', updateNavbarShadow);
+            
+            // 返回顶部
+            if (backToTop) {
+                backToTop.addEventListener('click', () => {
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    console.log('返回顶部');
+                });
+            }
+            
+            // 平滑滚动和导航激活状态
+            function setupSmoothScroll() {
+                navItems.forEach(anchor => {
+                    anchor.addEventListener('click', function(e) {
+                        const href = this.getAttribute('href');
+                        if (href === '#' || href === '#0') return;
+                        
+                        e.preventDefault();
+                        const target = document.querySelector(href);
+                        if (target) {
+                            target.scrollIntoView({ 
+                                behavior: 'smooth',
+                                block: 'start'
+                            });
+                            
+                            // 更新导航激活状态
+                            updateNavActiveState(href);
+                            
+                            console.log('滚动到:', href);
+                        }
+                    });
+                });
+            }
+            
+            // 更新导航激活状态
+            function updateNavActiveState(sectionId) {
+                // 更新桌面导航
+                navItems.forEach(item => {
+                    const href = item.getAttribute('href');
+                    if (href === sectionId) {
+                        item.classList.add('active');
+                    } else {
+                        item.classList.remove('active');
+                    }
+                });
+            }
+            
+            // 根据滚动位置自动更新导航激活状态
+            function setupScrollSpy() {
+                const sections = ['#home', '#websites', '#tools', '#about'];
+                
+                function onScroll() {
+                    const scrollPosition = window.scrollY + 100;
+                    
+                    for (const sectionId of sections) {
+                        const section = document.querySelector(sectionId);
+                        if (section) {
+                            const sectionTop = section.offsetTop;
+                            const sectionHeight = section.offsetHeight;
+                            
+                            if (scrollPosition >= sectionTop && 
+                                scrollPosition < sectionTop + sectionHeight) {
+                                updateNavActiveState(sectionId);
+                                break;
+                            }
+                        }
+                    }
+                }
+                
+                window.addEventListener('scroll', onScroll);
+                // 初始化一次
+                setTimeout(onScroll, 100);
+            }
+            
+            // 初始化滚动监听
+            setupScrollSpy();
+            setupSmoothScroll();
+            updateNavbarShadow(); // 初始检查
+            
+            console.log('导航交互初始化完成');
+        }
+        
+        // 新搜索框功能（替代原搜索）
+        function initNewSearch() {
+            console.log('初始化新搜索框...');
+            const searchInput = document.getElementById('newSearchInput');
+            const searchBtn = document.getElementById('newSearchBtn');
+            const searchResults = document.getElementById('newSearchResults');
+            const engineSelect = document.getElementById('searchEngineSelect');
+            const desktopSearchBtn = document.getElementById('desktopSearchBtn');
+            const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+            const heroSearchBtn = document.getElementById('heroSearchBtn');
+            
+            let currentSelectedIndex = -1;
+            let searchTimeout = null;
+            
+            // 聚焦到新搜索框
+            function focusSearch() {
+                searchInput.focus();
+                searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            
+            // 将原搜索按钮的点击改为聚焦新搜索框
+            if (desktopSearchBtn) {
+                desktopSearchBtn.addEventListener('click', focusSearch);
+            }
+            if (mobileSearchBtn) {
+                mobileSearchBtn.addEventListener('click', focusSearch);
+            }
+            if (heroSearchBtn) {
+                heroSearchBtn.addEventListener('click', focusSearch);
+            }
+            
+            // 获取分类名称
+            function getCategoryName(category) {
+                const map = { 'entertainment': '娱乐休闲', 'life': '生活服务', 'tools': '效率工具', 'game': '游戏', 'learning': '学习资源' };
+                return map[category] || category;
+            }
+            
+            // 拼音匹配函数
+            function pinyinMatch(text, query) {
+                if (!query) return false;
+                const lowerText = text.toLowerCase();
+                const lowerQuery = query.toLowerCase();
+                if (lowerText.includes(lowerQuery)) return true;
+                
+                // 使用pinyin库将中文转拼音
+                try {
+                    const pinyinArr = pinyin(text, { style: pinyin.STYLE_NORMAL, heteronym: false });
+                    const pinyinStr = pinyinArr.map(item => item[0]).join('').toLowerCase();
+                    if (pinyinStr.includes(lowerQuery)) return true;
+                    
+                    // 首字母匹配
+                    const firstLetter = pinyinArr.map(item => item[0][0]).join('').toLowerCase();
+                    if (firstLetter.includes(lowerQuery)) return true;
+                } catch (e) {
+                    // 拼音库可能出错，忽略
+                }
+                return false;
+            }
+            
+            // 站内搜索
+            function searchWebsites(query) {
+                if (!query.trim()) {
+                    searchResults.classList.add('hidden');
+                    return;
+                }
+                
+                const results = websites.filter(site => 
+                    pinyinMatch(site.name, query) || 
+                    pinyinMatch(site.desc, query) ||
+                    pinyinMatch(getCategoryName(site.category), query)
+                );
+                
+                if (results.length === 0) {
+                    searchResults.innerHTML = '<div class="p-8 text-center text-surface-500">没有找到匹配的结果</div>';
+                    searchResults.classList.remove('hidden');
+                    return;
+                }
+                
+                let html = '';
+                results.slice(0, 10).forEach((site, index) => {
+                    html += `
+                        <a href="${site.url}" target="_blank" class="search-result-item-new ${index === 0 ? 'selected' : ''}" data-url="${site.url}">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 bg-surface-200 border border-surface-300 rounded flex items-center justify-center">
+                                    <i class="${site.icon} text-gold-500/90"></i>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-surface-900">${site.name}</div>
+                                    <div class="text-sm text-surface-500">${site.desc}</div>
+                                </div>
+                            </div>
+                        </a>
+                    `;
+                });
+                if (results.length > 10) {
+                    html += '<div class="p-4 text-center text-surface-500 text-sm">还有更多结果，请输入更精确的关键词</div>';
+                }
+                searchResults.innerHTML = html;
+                searchResults.classList.remove('hidden');
+                
+                // 添加点击事件
+                document.querySelectorAll('.search-result-item-new').forEach(item => {
+                    item.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        window.open(this.dataset.url, '_blank');
+                        searchResults.classList.add('hidden');
+                        searchInput.value = '';
+                    });
+                });
+            }
+            
+            // 搜索引擎搜索
+            function searchEngine(query, engine) {
+                let url = '';
+                switch (engine) {
+                    case 'baidu': url = `https://www.baidu.com/s?wd=${encodeURIComponent(query)}`; break;
+                    case 'google': url = `https://www.google.com/search?q=${encodeURIComponent(query)}`; break;
+                    case 'bing': url = `https://www.bing.com/search?q=${encodeURIComponent(query)}`; break;
+                    default: url = `https://www.baidu.com/s?wd=${encodeURIComponent(query)}`;
+                }
+                window.open(url, '_blank');
+                searchResults.classList.add('hidden');
+                searchInput.value = '';
+            }
+            
+            // 执行搜索（根据模式）
+            function performSearch() {
+                const query = searchInput.value.trim();
+                if (!query) return;
+                
+                const engine = engineSelect.value;
+                // 如果选择的是站内搜索？我们通过下拉选项决定，这里统一用搜索引擎，站内搜索由输入事件触发结果浮层
+                // 点击搜索按钮时，如果是站内模式，可以打开第一个结果或保持浮层；这里我们统一用搜索引擎
+                // 为了更符合直觉，点击搜索按钮直接进行搜索引擎搜索
+                searchEngine(query, engine);
+            }
+            
+            // 输入事件：站内搜索
+            searchInput.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    searchWebsites(this.value);
+                }, 300);
+            });
+            
+            // 失去焦点时隐藏结果（允许点击结果）
+            searchInput.addEventListener('blur', function() {
+                setTimeout(() => {
+                    searchResults.classList.add('hidden');
+                }, 200);
+            });
+            
+            // 获得焦点时如果有关键词则显示结果
+            searchInput.addEventListener('focus', function() {
+                if (this.value.trim()) {
+                    searchWebsites(this.value);
+                }
+            });
+            
+            // 搜索按钮点击：执行搜索引擎搜索
+            searchBtn.addEventListener('click', performSearch);
+            
+            // 回车：如果是站内且有结果，打开第一个；否则搜索引擎
+            searchInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    const selected = document.querySelector('.search-result-item-new.selected');
+                    if (selected) {
+                        window.open(selected.dataset.url, '_blank');
+                        searchResults.classList.add('hidden');
+                        searchInput.value = '';
+                    } else {
+                        performSearch();
+                    }
+                } else if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    const items = document.querySelectorAll('.search-result-item-new');
+                    if (items.length) {
+                        currentSelectedIndex = (currentSelectedIndex + 1) % items.length;
+                        items.forEach((item, idx) => {
+                            if (idx === currentSelectedIndex) item.classList.add('selected');
+                            else item.classList.remove('selected');
+                        });
+                    }
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    const items = document.querySelectorAll('.search-result-item-new');
+                    if (items.length) {
+                        currentSelectedIndex = (currentSelectedIndex - 1 + items.length) % items.length;
+                        items.forEach((item, idx) => {
+                            if (idx === currentSelectedIndex) item.classList.add('selected');
+                            else item.classList.remove('selected');
+                        });
+                    }
+                }
+            });
+            
+            console.log('新搜索框初始化完成');
+        }
+        
+        // 网址网格状态管理
+        let websiteGridState = {
+            currentCount: 12,
+            currentFilter: 'all',
+            currentWebsites: []
+        };
+        
+        function initWebsiteGrid() {
+            console.log('初始化网址网格...');
+            
+            const grid = document.getElementById('websiteGrid');
+            
+            if (!grid) {
+                console.error('网址网格容器未找到');
+                return { renderWebsites: () => {}, loadMore: () => {} };
+            }
+            
+            function renderWebsites(filter = 'all') {
+                console.log('渲染网址，过滤器:', filter);
+                
+                grid.innerHTML = '';
+                websiteGridState.currentFilter = filter;
+                
+                const filtered = filter === 'all' 
+                    ? websites 
+                    : websites.filter(site => site.category === filter);
+                
+                websiteGridState.currentWebsites = filtered;
+                websiteGridState.currentCount = 12;
+                
+                const toShow = filtered.slice(0, websiteGridState.currentCount);
+                
+                toShow.forEach(site => {
+                    const card = document.createElement('a');
+                    card.href = site.url;
+                    card.target = '_blank';
+                    card.className = 'bg-surface-100 border border-surface-200 rounded-sm p-6 hover:border-gold-500/30 transition-all duration-300 will-change-transform';
+                    card.innerHTML = `
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 bg-surface-200 border border-surface-300 rounded flex items-center justify-center">
+                                <i class="${site.icon} text-gold-500/90 text-xl"></i>
+                            </div>
+                            ${site.hot ? '<span class="text-[10px] bg-gold-500/20 text-gold-500 px-2 py-1 rounded font-light tracking-wide">热门</span>' : ''}
+                        </div>
+                        <h4 class="text-lg font-light mb-2 text-surface-900">${site.name}</h4>
+                        <p class="text-surface-500 text-sm mb-4">${site.desc}</p>
+                        <div class="text-xs text-gold-500/90 font-light tracking-wide">访问 →</div>
+                    `;
+                    grid.appendChild(card);
+                });
+                
+                updateLoadMoreButton(filtered.length);
+                
+                console.log(`已显示 ${toShow.length} 个网址，总共 ${filtered.length} 个`);
+            }
+            
+            function loadMore() {
+                console.log('加载更多网址...');
+                
+                websiteGridState.currentCount += 12;
+                
+                grid.innerHTML = '';
+                
+                const toShow = websiteGridState.currentWebsites.slice(0, websiteGridState.currentCount);
+                
+                toShow.forEach(site => {
+                    const card = document.createElement('a');
+                    card.href = site.url;
+                    card.target = '_blank';
+                    card.className = 'bg-surface-100 border border-surface-200 rounded-sm p-6 hover:border-gold-500/30 transition-all duration-300 will-change-transform';
+                    card.innerHTML = `
+                        <div class="flex items-start justify-between mb-4">
+                            <div class="w-12 h-12 bg-surface-200 border border-surface-300 rounded flex items-center justify-center">
+                                <i class="${site.icon} text-gold-500/90 text-xl"></i>
+                            </div>
+                            ${site.hot ? '<span class="text-[10px] bg-gold-500/20 text-gold-500 px-2 py-1 rounded font-light tracking-wide">热门</span>' : ''}
+                        </div>
+                        <h4 class="text-lg font-light mb-2 text-surface-900">${site.name}</h4>
+                        <p class="text-surface-500 text-sm mb-4">${site.desc}</p>
+                        <div class="text-xs text-gold-500/90 font-light tracking-wide">访问 →</div>
+                    `;
+                    grid.appendChild(card);
+                });
+                
+                updateLoadMoreButton(websiteGridState.currentWebsites.length);
+                
+                console.log(`已加载 ${toShow.length} 个网址，总共 ${websiteGridState.currentWebsites.length} 个`);
+            }
+            
+            function updateLoadMoreButton(total) {
+                const loadMoreBtn = document.getElementById('loadMore');
+                if (!loadMoreBtn) return;
+                
+                if (websiteGridState.currentCount >= total) {
+                    loadMoreBtn.innerHTML = `已显示全部 ${total} 个`;
+                    loadMoreBtn.classList.remove('border-gold-500/50', 'text-gold-500', 'hover:border-gold-500/50');
+                    loadMoreBtn.classList.add('border-surface-400', 'text-surface-500');
+                    loadMoreBtn.disabled = true;
+                } else {
+                    loadMoreBtn.innerHTML = `加载更多 (${websiteGridState.currentCount}/${total})`;
+                    loadMoreBtn.classList.remove('border-surface-400', 'text-surface-500');
+                    loadMoreBtn.classList.add('border-gold-500/50', 'text-gold-500', 'hover:border-gold-500/50');
+                    loadMoreBtn.disabled = false;
+                }
+            }
+            
+            renderWebsites();
+            console.log('网址网格初始化完成');
+            
+            return { renderWebsites, loadMore };
+        }
+        
+        // 热门网站
+        function initHotSites() {
+            console.log('初始化热门网站...');
+            
+            const container = document.getElementById('hotSites');
+            if (!container) {
+                console.error('热门网站容器未找到');
+                return;
+            }
+            
+            const hotSites = websites.filter(site => site.hot).slice(0, 4);
+            
+            hotSites.forEach(site => {
+                const card = document.createElement('a');
+                card.href = site.url;
+                card.target = '_blank';
+                card.className = 'bg-surface-100 border border-surface-200 rounded-sm p-6 hover:border-gold-500/30 transition-all duration-300';
+                card.innerHTML = `
+                    <div class="flex items-center gap-4">
+                        <div class="w-12 h-12 bg-surface-200 border border-surface-300 rounded flex items-center justify-center">
+                            <i class="${site.icon} text-gold-500/90 text-xl"></i>
+                        </div>
+                        <div class="flex-grow">
+                            <h4 class="font-light text-surface-900 mb-1">${site.name}</h4>
+                            <p class="text-surface-500 text-sm">${site.desc}</p>
+                        </div>
+                        <svg viewBox="0 0 24 24" class="w-3.5 h-3.5 text-gold-500/90" fill="currentColor"><path d="M19 19H5V5h7V3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2v-7h-2v7zM14 3v2h3.59l-9.83 9.83 1.41 1.41L19 6.41V10h2V3h-7z"/></svg>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            console.log('热门网站初始化完成，显示', hotSites.length, '个');
+        }
+        
+        // 随机网站
+        function initRandomSite() {
+            console.log('初始化随机网站功能...');
+            
+            const btn = document.getElementById('randomSite');
+            if (!btn) {
+                console.error('随机网站按钮未找到');
+                return;
+            }
+            
+            btn.addEventListener('click', () => {
+                const randomSite = websites[Math.floor(Math.random() * websites.length)];
+                
+                // 显示提示
+                const toast = document.createElement('div');
+                toast.className = 'fixed top-24 right-4 bg-surface-100 border border-surface-200 rounded-sm p-4 animate-slide-up z-50 border-l-2 border-gold-500 max-w-sm';
+                toast.innerHTML = `
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 bg-surface-200 border border-surface-300 rounded flex items-center justify-center">
+                            <i class="${randomSite.icon} text-gold-500/90"></i>
+                        </div>
+                        <div>
+                            <div class="font-bold">发现：${randomSite.name}</div>
+                            <div class="text-sm text-surface-500">${randomSite.desc}</div>
+                        </div>
+                    </div>
+                    <div class="mt-3 flex gap-2">
+                        <button class="px-4 py-2 border border-gold-500/50 text-gold-500 rounded-sm text-sm font-light hover:bg-gold-500/10 transition-colors" id="visitRandom">立即访问</button>
+                        <button class="px-4 py-2 border border-surface-300 rounded-sm text-sm font-light text-surface-600 hover:border-gold-500/50 hover:text-gold-500 transition-colors" id="closeToast">再找找</button>
+                    </div>
+                `;
+                document.body.appendChild(toast);
+                
+                document.getElementById('visitRandom').addEventListener('click', () => {
+                    window.open(randomSite.url, '_blank');
+                    document.body.removeChild(toast);
+                });
+                
+                document.getElementById('closeToast').addEventListener('click', () => {
+                    document.body.removeChild(toast);
+                });
+                
+                setTimeout(() => {
+                    if (document.body.contains(toast)) {
+                        document.body.removeChild(toast);
+                    }
+                }, 5000);
+                
+                console.log('随机推荐网站:', randomSite.name);
+            });
+            
+            console.log('随机网站功能初始化完成');
+        }
+        
+        // 分类筛选
+        function initCategoryFilter() {
+            console.log('初始化分类筛选...');
+            
+            const tabs = document.querySelectorAll('.category-tab');
+            if (!tabs.length) {
+                console.error('分类标签未找到');
+                return;
+            }
+            
+            const websiteGrid = initWebsiteGrid();
+            
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    websiteGrid.renderWebsites(category);
+                    
+                    console.log('切换到分类:', category);
+                });
+            });
+            
+            console.log('分类筛选初始化完成');
+        }
+        
+        // 加载更多
+        function initLoadMore() {
+            console.log('初始化加载更多功能...');
+            
+            const loadMoreBtn = document.getElementById('loadMore');
+            if (!loadMoreBtn) {
+                console.error('加载更多按钮未找到');
+                return;
+            }
+            
+            const websiteGrid = initWebsiteGrid();
+            
+            loadMoreBtn.addEventListener('click', () => {
+                websiteGrid.loadMore();
+            });
+            
+            console.log('加载更多功能初始化完成');
+        }
+
+        // 新标签页按钮功能
+        function initNewTabButton() {
+            console.log('初始化新标签页按钮...');
+            const newTabBtn = document.getElementById('newTabBtn');
+            const mobileNewTabBtn = document.getElementById('mobileNewTabBtn');
+            
+            function openNewTab() {
+                window.open(window.location.href, '_blank');
+                console.log('已在新标签页打开本站');
+            }
+            
+            if (newTabBtn) {
+                newTabBtn.addEventListener('click', openNewTab);
+            }
+            if (mobileNewTabBtn) {
+                mobileNewTabBtn.addEventListener('click', openNewTab);
+            }
+            console.log('新标签页按钮初始化完成');
+        }
+    </script>
+</body>
+</html>
