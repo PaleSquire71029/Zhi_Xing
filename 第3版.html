@@ -1,0 +1,1487 @@
+<!DOCTYPE html>
+<html lang="zh-CN" class="dark scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>知行导航 | 极简高效网址聚合与效率中枢</title>
+
+    <!-- 预连接提升加载性能 -->
+    <link rel="preconnect" href="https://cdn.tailwindcss.com">
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="preconnect" href="https://unpkg.com">
+
+    <!-- Tailwind CSS（同步，必须在渲染前完成，以生成 JIT 样式） -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- FontAwesome 6 图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous">
+
+    <!-- Google Fonts 字体库 -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Noto+Serif+SC:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- 说明：拼音库改为运行时异步加载，绝不阻塞首屏渲染 -->
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#FAF8F5',
+                            100: '#F3EFE6',
+                            200: '#E5DBC7',
+                            300: '#D4C4A3',
+                            400: '#C2AA7D',
+                            500: '#B09056',
+                            600: '#94763F',
+                            700: '#755B2E',
+                            800: '#584320',
+                            900: '#3D2D14'
+                        },
+                        dark: {
+                            bg: '#08090C',
+                            surface: '#111318',
+                            card: '#171A21',
+                            border: '#262A36',
+                            hover: '#1F2430'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'system-ui', '-apple-system', 'sans-serif'],
+                        serif: ['"Noto Serif SC"', 'Georgia', 'serif'],
+                    },
+                    animation: {
+                        'glow-pulse': 'glowPulse 4s ease-in-out infinite',
+                        'float': 'float 6s ease-in-out infinite',
+                        'shimmer': 'shimmer 2.5s infinite linear',
+                    },
+                    keyframes: {
+                        glowPulse: {
+                            '0%, 100%': { opacity: '0.3', transform: 'scale(1)' },
+                            '50%': { opacity: '0.6', transform: 'scale(1.05)' }
+                        },
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-6px)' }
+                        },
+                        shimmer: {
+                            '0%': { transform: 'translateX(-100%)' },
+                            '100%': { transform: 'translateX(100%)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* ===== 高级材质系统 ===== */
+        :root {
+            --zx-gold: 176, 144, 86;
+            --zx-cyan: 87, 196, 255;
+            --zx-violet: 132, 108, 255;
+            --zx-surface: rgba(18, 21, 29, .68);
+            --zx-border: rgba(255,255,255,.10);
+            --zx-ease: cubic-bezier(.16,1,.3,1);
+        }
+        html { scroll-behavior: smooth; }
+        body {
+            position: relative;
+            isolation: isolate;
+            background:
+                radial-gradient(900px 500px at 12% -8%, rgba(var(--zx-gold),.12), transparent 62%),
+                radial-gradient(800px 500px at 88% 8%, rgba(var(--zx-violet),.10), transparent 62%),
+                radial-gradient(700px 450px at 50% 105%, rgba(var(--zx-cyan),.07), transparent 65%),
+                #08090C;
+        }
+        body::before {
+            content: ""; position: fixed; inset: 0; z-index: -2; pointer-events: none;
+            background-image: linear-gradient(rgba(255,255,255,.018) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.018) 1px, transparent 1px);
+            background-size: 42px 42px;
+            mask-image: linear-gradient(to bottom, black, transparent 78%);
+            opacity: .45;
+        }
+        body::after {
+            content: ""; position: fixed; inset: -30%; z-index: -1; pointer-events: none;
+            background: conic-gradient(from 180deg at 50% 50%, transparent 0deg, rgba(var(--zx-gold),.045) 80deg, transparent 150deg, rgba(var(--zx-violet),.04) 240deg, transparent 320deg);
+            filter: blur(70px); animation: ambientSpin 24s linear infinite;
+        }
+        @keyframes ambientSpin { to { transform: rotate(360deg) scale(1.04); } }
+        @keyframes fadeUp { from { opacity:0; transform: translateY(14px) scale(.985); } to { opacity:1; transform:none; } }
+        @keyframes softPulse { 0%,100% { opacity:.55; transform:scale(.96); } 50% { opacity:1; transform:scale(1.04); } }
+        @keyframes shimmerLine { 0% { transform:translateX(-120%); } 100% { transform:translateX(220%); } }
+        @keyframes floatSlow { 0%,100% { transform:translate3d(0,0,0); } 50% { transform:translate3d(0,-7px,0); } }
+
+        .glass-panel, .glass-card, .category-card {
+            background: linear-gradient(135deg, rgba(255,255,255,.075), rgba(255,255,255,.025) 42%, rgba(255,255,255,.045));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.08), inset 0 -1px 0 rgba(0,0,0,.35), 0 24px 80px rgba(0,0,0,.30);
+            border-color: var(--zx-border) !important;
+        }
+        .glass-panel::before, .glass-card::before, .category-card::before {
+            content:""; position:absolute; inset:0; pointer-events:none;
+            background: linear-gradient(115deg, rgba(255,255,255,.10), transparent 22%, transparent 72%, rgba(255,255,255,.025));
+            opacity:.65;
+        }
+        .glass-panel::after, .glass-card::after, .category-card::after {
+            content:""; position:absolute; top:0; left:-70%; width:42%; height:1px; pointer-events:none;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.7), transparent);
+            opacity:.28; animation: shimmerLine 7s ease-in-out infinite;
+        }
+        .glass-panel-hover, .glass-card, .category-card, .search-result-item, .engine-tab {
+            transition: transform .45s var(--zx-ease), border-color .35s ease, background .35s ease, box-shadow .45s var(--zx-ease), filter .35s ease;
+        }
+        .glass-panel-hover:hover, .glass-card:hover, .category-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(var(--zx-gold), .32) !important;
+            box-shadow: 0 18px 55px rgba(0,0,0,.34), 0 0 0 1px rgba(var(--zx-gold),.05), inset 0 1px 0 rgba(255,255,255,.10);
+        }
+        .engine-tab:hover { transform: translateY(-1px); }
+
+        #searchInput {
+            background: linear-gradient(180deg, rgba(255,255,255,.045), rgba(255,255,255,.02));
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.05), 0 0 0 1px rgba(255,255,255,.02);
+            transition: box-shadow .35s ease, background .35s ease, transform .35s var(--zx-ease);
+        }
+        #searchInput:focus {
+            background: rgba(255,255,255,.055);
+            box-shadow: 0 0 0 1px rgba(var(--zx-gold),.35), 0 0 45px rgba(var(--zx-gold),.10), inset 0 1px 0 rgba(255,255,255,.08);
+        }
+
+        .animate-float { animation: floatSlow 5s ease-in-out infinite; }
+        .reveal-item { animation: fadeUp .55s var(--zx-ease) both; animation-delay: calc(var(--i, 0) * 35ms); }
+        .zx-glow-dot { animation: softPulse 3.5s ease-in-out infinite; }
+
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration:.01ms !important; animation-iteration-count:1 !important; scroll-behavior:auto !important; transition-duration:.01ms !important; }
+        }
+
+        /* 中英文字体分工 */
+        body, input, textarea, button, select {
+            font-family: "Plus Jakarta Sans", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+        .font-serif,
+        #pageTitle,
+        h1.font-serif {
+            font-family: "Noto Serif SC", "Songti SC", serif !important;
+        }
+        .font-mono {
+            font-family: "Plus Jakarta Sans", ui-monospace, SFMono-Regular, Menlo, monospace !important;
+        }
+        .latin-font {
+            font-family: "Plus Jakarta Sans", system-ui, sans-serif !important;
+        }
+
+        body {
+            background-color: #08090C;
+            color: #E2E8F0;
+            overflow-x: hidden;
+        }
+
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #08090C; }
+        ::-webkit-scrollbar-thumb { background: #262A36; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #B09056; }
+
+        .glass-panel {
+            background: rgba(23, 26, 33, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+        }
+        .glass-panel-hover { transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+        .glass-panel-hover:hover {
+            background: rgba(31, 36, 48, 0.85);
+            border-color: rgba(176, 144, 86, 0.4);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px -10px rgba(0, 0, 0, 0.6), 0 0 15px rgba(176, 144, 86, 0.15);
+        }
+
+        /* 背景微光 Canvas */
+        #bgCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.5;
+        }
+
+        /* 隐藏滚动条但保留功能 */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        /* ===== 站内搜索建议面板 ===== */
+        #searchResultsOverlay {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 10px);
+            z-index: 60;
+            padding: 6px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,.10);
+            background: rgba(14,16,21,.965);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 28px 70px rgba(0,0,0,.62), inset 0 1px 0 rgba(255,255,255,.06);
+            max-height: min(62vh, 430px);
+            overflow-y: auto;
+            overflow-x: hidden;
+            text-align: left;
+            box-sizing: border-box;
+            max-width: 100%;
+        }
+        #searchResultsOverlay.hidden { display: none !important; }
+
+        .search-result-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 9px 12px;
+            border-radius: 12px;
+            border-left: 3px solid transparent;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        .search-result-item:hover,
+        .search-result-item.search-item-selected {
+            background: rgba(176,144,86,.16);
+            border-left-color: #B09056;
+            transform: translateX(2px);
+        }
+        .sri-icon {
+            width: 34px; height: 34px;
+            border-radius: 10px;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+        .sri-body { display: flex; flex-direction: column; min-width: 0; flex: 1; }
+        .sri-name {
+            font-size: 13px; font-weight: 600; color: #fff;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .sri-desc {
+            font-size: 11px; color: #94a3b8;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+        }
+        .sri-cat {
+            font-size: 10px; color: #c2aa7d;
+            background: rgba(176,144,86,.12);
+            border: 1px solid rgba(176,144,86,.22);
+            padding: 2px 8px; border-radius: 999px; flex-shrink: 0;
+        }
+        .sri-empty {
+            display: flex; align-items: center; gap: 10px;
+            padding: 14px; color: #94a3b8; font-size: 12px;
+        }
+
+        /* 收尾响应式与页脚修复 */
+        html {
+            min-height: 100%;
+            
+        }
+        body {
+            min-height: 100vh;
+            overflow-x: clip;
+            
+        }
+        main, .container, .max-w-7xl, .max-w-6xl, .max-w-5xl, .max-w-4xl {
+            box-sizing: border-box;
+        }
+        input[type="search"], input[type="text"] {
+            min-width: 0;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+        button { flex-shrink: 0; }
+        footer {
+            position: relative !important;
+            bottom: auto !important;
+            height: auto !important;
+            min-height: 0 !important;
+            overflow: visible !important;
+            margin-top: 24px;
+            padding-bottom: max(20px, env(safe-area-inset-bottom)) !important;
+        }
+        @media (max-width: 640px) {
+            body { font-size: 14px; }
+            footer {
+                margin-top: 18px;
+                padding-left: 16px;
+                padding-right: 16px;
+            }
+        }
+
+        /* 无 JS 时的兜底提示 */
+        .noscript-tip {
+            display: none;
+            margin: 24px auto;
+            max-width: 720px;
+            padding: 16px;
+            border-radius: 14px;
+            border: 1px solid rgba(176,144,86,.35);
+            background: rgba(176,144,86,.10);
+            color: #D4C4A3;
+            font-size: 13px;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body class="min-h-screen flex flex-col relative selection:bg-brand-500/30 selection:text-brand-300">
+
+    <!-- 背景动态粒子 Canvas -->
+    <canvas id="bgCanvas"></canvas>
+
+    <noscript>
+        <div class="noscript-tip" style="display:block;">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            当前浏览器已禁用 JavaScript，本站的网址渲染、搜索与工具功能将无法使用，请开启后刷新页面。
+        </div>
+    </noscript>
+
+    <!-- 顶部固定导航栏 -->
+    <header class="sticky top-0 z-40 w-full glass-panel border-b border-white/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+
+            <a href="#top" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-brand-400/20 to-brand-600/10 border border-brand-500/30 flex items-center justify-center group-hover:border-brand-500/80 transition-all duration-300 group-hover:shadow-[0_0_15px_rgba(176,144,86,0.3)]">
+                    <i class="fa-solid fa-compass text-brand-400 group-hover:rotate-45 transition-transform duration-500 text-lg"></i>
+                </div>
+                <div class="flex flex-col">
+                    <span class="text-base font-serif font-semibold tracking-wide text-white group-hover:text-brand-300 transition-colors">知行导航</span>
+                    <span class="text-[10px] text-slate-400 tracking-widest uppercase font-mono">Zhixing Hub</span>
+                </div>
+            </a>
+
+            <nav class="hidden md:flex items-center gap-1 text-sm font-medium text-slate-300">
+                <a href="#search" class="px-3 py-1.5 rounded-lg hover:text-brand-300 hover:bg-white/5 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass text-xs opacity-70"></i>探索
+                </a>
+                <a href="#categories" class="px-3 py-1.5 rounded-lg hover:text-brand-300 hover:bg-white/5 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-layer-group text-xs opacity-70"></i>分类导航
+                </a>
+                <a href="#quickTools" class="px-3 py-1.5 rounded-lg hover:text-brand-300 hover:bg-white/5 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-screwdriver-wrench text-xs opacity-70"></i>工具箱
+                </a>
+                <a href="#customBookmarks" class="px-3 py-1.5 rounded-lg hover:text-brand-300 hover:bg-white/5 transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-bookmark text-xs opacity-70"></i>私房书签
+                </a>
+            </nav>
+
+            <div class="flex items-center gap-3">
+                <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-dark-card/80 border border-white/5 text-xs text-slate-300 font-mono">
+                    <i class="fa-regular fa-clock text-brand-400"></i>
+                    <span id="liveClock">00:00:00</span>
+                </div>
+
+                <button id="openAddModalBtn" class="px-3 py-1.5 rounded-lg bg-brand-500/10 hover:bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-medium transition-all flex items-center gap-1.5">
+                    <i class="fa-solid fa-plus text-xs"></i>
+                    <span class="hidden sm:inline">新增网址</span>
+                </button>
+
+                <button id="mobileMenuToggle" class="md:hidden p-2 rounded-lg text-slate-300 hover:text-white hover:bg-white/5">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobileMenu" class="hidden md:hidden border-t border-white/10 bg-dark-surface/95 backdrop-blur-xl px-4 py-3 space-y-2 text-sm">
+            <a href="#search" class="block py-2 text-slate-300 hover:text-brand-300 flex items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass text-brand-400"></i>探索搜索
+            </a>
+            <a href="#categories" class="block py-2 text-slate-300 hover:text-brand-300 flex items-center gap-2">
+                <i class="fa-solid fa-layer-group text-brand-400"></i>网址精选
+            </a>
+            <a href="#quickTools" class="block py-2 text-slate-300 hover:text-brand-300 flex items-center gap-2">
+                <i class="fa-solid fa-screwdriver-wrench text-brand-400"></i>实用工具
+            </a>
+            <a href="#customBookmarks" class="block py-2 text-slate-300 hover:text-brand-300 flex items-center gap-2">
+                <i class="fa-solid fa-bookmark text-brand-400"></i>我的自定义书签
+            </a>
+        </div>
+    </header>
+
+    <main class="flex-grow z-10 overflow-x-hidden w-full">
+        <!-- Hero & 全能搜索中心 -->
+        <section id="search" class="relative pt-12 pb-14 md:pt-16 md:pb-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center">
+
+            <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-300 text-xs font-medium mb-6 animate-float">
+                <span id="greetingIcon"><i class="fa-solid fa-sun text-amber-400"></i></span>
+                <span id="greetingText">知行合一 · 止于至善</span>
+            </div>
+
+            <h1 class="text-3xl sm:text-5xl font-serif font-bold tracking-tight text-white mb-4">
+                探索全网优质资源 <span class="text-transparent bg-clip-text bg-gradient-to-r from-brand-300 via-brand-400 to-amber-200">一触即达</span>
+            </h1>
+            <p class="text-slate-400 text-sm sm:text-base max-w-2xl mx-auto font-light mb-8">
+                精选严选的高效工具、AI大模型、学习资源与日常门户，支持全域智能检索与快捷访问。
+            </p>
+
+            <!-- 搜索引擎切换 & 搜索框（移动端深度优化） -->
+            <div class="max-w-4xl mx-auto glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-5 border border-white/10 shadow-2xl relative z-20">
+
+                <!-- 移动端改为 justify-start 并允许横向滑动，防止被截断 -->
+                <div class="flex items-center justify-start sm:justify-center gap-1.5 sm:gap-2 mb-4 pb-4 border-b border-white/5 overflow-x-auto no-scrollbar" id="engineTabs">
+                    <button data-engine="google" class="engine-tab px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium active text-brand-300 bg-brand-500/20 border border-brand-500/30 hover:text-white hover:bg-white/5 flex items-center gap-2 transition-all whitespace-nowrap">
+                        <i class="fa-brands fa-google"></i>Google
+                    </button>
+                    <button data-engine="bing" class="engine-tab px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 flex items-center gap-2 transition-all whitespace-nowrap">
+                        <i class="fa-brands fa-microsoft"></i>Bing
+                    </button>
+                    <button data-engine="bilibili" class="engine-tab px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 flex items-center gap-2 transition-all whitespace-nowrap">
+                        <i class="fa-brands fa-bilibili"></i>Bilibili
+                    </button>
+                    <button data-engine="github" class="engine-tab px-3 sm:px-4 py-2 rounded-xl text-xs sm:text-sm font-medium text-slate-400 hover:text-white hover:bg-white/5 flex items-center gap-2 transition-all whitespace-nowrap">
+                        <i class="fa-brands fa-github"></i>GitHub
+                    </button>
+                </div>
+
+                <div id="searchBoxWrapper" class="relative flex items-center">
+                    <!-- 左侧留白调整为 pl-12，释放更多空间 -->
+                    <i class="fa-solid fa-magnifying-glass absolute left-5 text-slate-400 text-lg sm:text-xl pointer-events-none"></i>
+                    <!-- 移动端占位符精简，右侧留白压缩至 pr-24 -->
+                    <input type="text" id="searchInput"
+                           placeholder="搜索关键词 / 拼音 / 首字母"
+                           class="w-full bg-dark-bg/80 text-white placeholder-slate-500 pl-12 sm:pl-16 pr-24 sm:pr-44 py-4 sm:py-5 rounded-2xl border border-white/10 focus:outline-none focus:border-brand-500/80 focus:ring-1 focus:ring-brand-500/50 text-base sm:text-lg transition-all"
+                           autocomplete="off" spellcheck="false" enterkeyhint="search" aria-label="站内与全网搜索">
+
+                    <div class="absolute right-2.5 flex items-center gap-1.5">
+                        <span class="hidden md:inline-block text-[10px] text-slate-500 bg-white/5 px-2 py-1 rounded border border-white/5 font-mono">⌘K</span>
+                        <button id="searchSubmitBtn" class="px-5 sm:px-6 py-2.5 sm:py-3 rounded-xl bg-gradient-to-r from-brand-500 to-amber-600 hover:from-brand-400 hover:to-amber-500 text-white font-medium text-sm sm:text-base transition-all shadow-md flex items-center gap-1.5">
+                            <span>搜索</span>
+                        </button>
+                    </div>
+
+                    <div id="searchResultsOverlay" class="hidden"></div>
+                </div>
+            </div>
+
+            <div class="mt-8 flex flex-wrap justify-center items-center gap-2.5 max-w-4xl mx-auto" id="pinnedDock"></div>
+
+            <div class="mt-8 max-w-xl mx-auto glass-panel rounded-xl p-4 flex items-center justify-between gap-4 border border-brand-500/20 text-left">
+                <div class="flex items-start gap-3">
+                    <div class="p-2 rounded-lg bg-brand-500/10 text-brand-400 shrink-0 mt-0.5">
+                        <i class="fa-solid fa-quote-left text-sm"></i>
+                    </div>
+                    <div>
+                        <p class="text-xs sm:text-sm text-slate-200 font-serif leading-relaxed" id="dailyQuote">知是行之始，行是知之成。知行合一，笃行致远。</p>
+                        <span class="text-[10px] text-slate-400 mt-1 block font-mono" id="dailyQuoteAuthor">— 王阳明</span>
+                    </div>
+                </div>
+                <button id="refreshQuoteBtn" class="p-2 text-slate-400 hover:text-brand-300 transition-colors shrink-0" title="换一句">
+                    <i class="fa-solid fa-rotate text-xs"></i>
+                </button>
+            </div>
+        </section>
+
+        <!-- 网址精选导航区域 -->
+        <section id="categories" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/5">
+
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+                <div>
+                    <div class="flex items-center gap-2 text-brand-400 text-xs font-mono uppercase tracking-wider mb-1">
+                        <i class="fa-solid fa-boxes-stacked"></i> Curated Directory
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white">精选网址大全</h2>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1" id="categoryFilterBar"></div>
+
+                    <div class="hidden sm:flex items-center gap-1 bg-dark-card border border-white/10 rounded-lg p-1 shrink-0">
+                        <button id="viewGridBtn" class="p-1.5 rounded text-brand-300 bg-white/10 text-xs" title="网格视图">
+                            <i class="fa-solid fa-border-all"></i>
+                        </button>
+                        <button id="viewListBtn" class="p-1.5 rounded text-slate-400 hover:text-white text-xs" title="列表视图">
+                            <i class="fa-solid fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="websiteGridContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"></div>
+
+            <div class="mt-10 text-center flex flex-col items-center gap-2">
+                <button id="loadMoreWebsitesBtn" class="px-6 py-2.5 rounded-xl glass-panel text-slate-300 hover:text-brand-300 hover:border-brand-500/50 text-xs font-medium transition-all flex items-center gap-2">
+                    <span>展开更多资源</span>
+                    <i class="fa-solid fa-chevron-down text-[10px]"></i>
+                </button>
+                <span id="siteCountStats" class="text-xs font-mono text-slate-500">已加载 0 个资源</span>
+            </div>
+        </section>
+
+        <!-- 实用在线工具箱区域 -->
+        <section id="quickTools" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/5">
+            <div class="mb-8">
+                <div class="flex items-center gap-2 text-brand-400 text-xs font-mono uppercase tracking-wider mb-1">
+                    <i class="fa-solid fa-bolt"></i> Productivity Toolkit
+                </div>
+                <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white">高效极客小工具箱</h2>
+                <p class="text-slate-400 text-xs sm:text-sm font-light mt-1">无需安装，纯前端本地计算，保护数据隐私</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+                <!-- 工具1：随机强密码生成器 -->
+                <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/20 flex items-center justify-center">
+                                <i class="fa-solid fa-key"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-semibold text-white">强密码生成器</h3>
+                                <p class="text-xs text-slate-400">一键生成高安全强度随机密码</p>
+                            </div>
+                        </div>
+
+                        <div class="space-y-3 mb-4">
+                            <div class="flex items-center justify-between text-xs text-slate-300">
+                                <span>密码长度: <strong id="pwdLengthVal" class="text-brand-300">16</strong> 位</span>
+                                <input type="range" id="pwdLengthRange" min="8" max="32" value="16" class="w-28 accent-brand-500 cursor-pointer">
+                            </div>
+                            <div class="p-3 bg-dark-bg/80 border border-white/10 rounded-xl flex items-center justify-between font-mono text-xs sm:text-sm text-brand-300 break-all select-all min-h-[44px]" id="pwdResult">
+                                点击下方按钮生成...
+                            </div>
+                        </div>
+                    </div>
+
+                    <button id="genPwdBtn" class="w-full py-2.5 rounded-xl bg-brand-500/20 hover:bg-brand-500/30 border border-brand-500/40 text-brand-300 text-xs font-medium transition-all flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>生成并复制密码
+                    </button>
+                </div>
+
+                <!-- 工具2：文本统计与转换器 -->
+                <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-xl bg-blue-500/10 text-blue-400 border border-blue-500/20 flex items-center justify-center">
+                                <i class="fa-solid fa-i-cursor"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-semibold text-white">字数统计与格式化</h3>
+                                <p class="text-xs text-slate-400">实时计算字符数、词数与大小写转换</p>
+                            </div>
+                        </div>
+
+                        <textarea id="textToolInput" rows="3" placeholder="在此粘贴文本测试..." class="w-full bg-dark-bg/80 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 mb-3 resize-none"></textarea>
+
+                        <div class="grid grid-cols-3 gap-2 text-center text-xs font-mono text-slate-300 mb-4">
+                            <div class="p-2 rounded-lg bg-white/5 border border-white/5">
+                                <div class="text-slate-500 text-[10px]">字符数</div>
+                                <div id="charCount" class="text-brand-300 font-bold">0</div>
+                            </div>
+                            <div class="p-2 rounded-lg bg-white/5 border border-white/5">
+                                <div class="text-slate-500 text-[10px]">单词数</div>
+                                <div id="wordCount" class="text-brand-300 font-bold">0</div>
+                            </div>
+                            <div class="p-2 rounded-lg bg-white/5 border border-white/5">
+                                <div class="text-slate-500 text-[10px]">行数</div>
+                                <div id="lineCount" class="text-brand-300 font-bold">0</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button id="uppercaseBtn" class="flex-1 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-slate-300 transition-all">大写</button>
+                        <button id="lowercaseBtn" class="flex-1 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs text-slate-300 transition-all">小写</button>
+                        <button id="clearTextBtn" class="py-2 px-3 rounded-lg bg-red-500/10 hover:bg-red-500/20 text-red-400 text-xs transition-all">清空</button>
+                    </div>
+                </div>
+
+                <!-- 工具3：Base64 / URL 编解码器 -->
+                <div class="glass-panel rounded-2xl p-5 border border-white/10 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="w-9 h-9 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 flex items-center justify-center">
+                                <i class="fa-solid fa-code"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-base font-semibold text-white">Base64 / URL 编解码</h3>
+                                <p class="text-xs text-slate-400">开发人员必备字符安全转换</p>
+                            </div>
+                        </div>
+
+                        <textarea id="codecInput" rows="3" placeholder="输入要编码/解码的文本..." class="w-full bg-dark-bg/80 border border-white/10 rounded-xl p-3 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-brand-500 mb-3 font-mono resize-none"></textarea>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <button id="b64EncodeBtn" class="py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs transition-all">Base64 编码</button>
+                        <button id="b64DecodeBtn" class="py-2 rounded-xl bg-purple-500/10 hover:bg-purple-500/20 border border-purple-500/30 text-purple-300 text-xs transition-all">Base64 解码</button>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- 自定义私人书签区域 -->
+        <section id="customBookmarks" class="py-12 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto border-t border-white/5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-8 gap-4">
+                <div>
+                    <div class="flex items-center gap-2 text-brand-400 text-xs font-mono uppercase tracking-wider mb-1">
+                        <i class="fa-solid fa-star"></i> Personal Vault
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-serif font-bold text-white">我的私房书签</h2>
+                    <p class="text-slate-400 text-xs sm:text-sm font-light mt-1">保存在您本地浏览器中的个人专属网址全集</p>
+                </div>
+
+                <div class="flex items-center gap-2">
+                    <button id="exportBookmarksBtn" class="px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium transition-all flex items-center gap-1.5 border border-white/10">
+                        <i class="fa-solid fa-download"></i>导出配置
+                    </button>
+                    <button id="importBookmarksTrigger" class="px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium transition-all flex items-center gap-1.5 border border-white/10">
+                        <i class="fa-solid fa-upload"></i>导入配置
+                    </button>
+                    <input type="file" id="importFileInput" class="hidden" accept=".json">
+                </div>
+            </div>
+
+            <div id="customBookmarksGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4"></div>
+        </section>
+    </main>
+
+    <!-- 添加新网址 Modal 弹窗 -->
+    <div id="addSiteModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/80 backdrop-blur-md">
+        <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-white/15 shadow-2xl relative">
+            <div class="flex items-center justify-between mb-5">
+                <h3 class="text-lg font-serif font-semibold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-plus-circle text-brand-400"></i>添加新网址书签
+                </h3>
+                <button id="closeAddModalBtn" class="text-slate-400 hover:text-white text-lg">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <form id="addSiteForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">网站名称 <span class="text-red-400">*</span></label>
+                    <input type="text" id="siteNameInput" required placeholder="例如：V2EX 社区" class="w-full bg-dark-bg border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">网站 URL 地址 <span class="text-red-400">*</span></label>
+                    <input type="url" id="siteUrlInput" required placeholder="https://..." class="w-full bg-dark-bg border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">分类板块</label>
+                    <select id="siteCategoryInput" class="w-full bg-dark-bg border border-white/10 rounded-xl px-3 py-2 text-sm text-slate-300 focus:outline-none focus:border-brand-500">
+                        <option value="ai">AI 智能</option>
+                        <option value="tools">效率工具</option>
+                        <option value="dev">开发者/编程</option>
+                        <option value="entertainment">影视娱乐</option>
+                        <option value="game">游戏社区</option>
+                        <option value="design">设计灵感</option>
+                        <option value="learning">学习知识</option>
+                        <option value="life">生活服务</option>
+                    </select>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">简介描述</label>
+                    <input type="text" id="siteDescInput" placeholder="一句话简单描述用途..." class="w-full bg-dark-bg border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-brand-500">
+                </div>
+
+                <div class="pt-2 flex justify-end gap-3">
+                    <button type="button" id="cancelModalBtn" class="px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 text-slate-300 text-xs font-medium">取消</button>
+                    <button type="submit" class="px-5 py-2 rounded-xl bg-gradient-to-r from-brand-500 to-amber-600 text-white text-xs font-medium hover:brightness-110 shadow-lg">保存书签</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 页脚区域 -->
+    <footer class="border-t border-white/10 bg-dark-surface py-12 px-4 sm:px-6 lg:px-8 mt-16 text-slate-400 text-xs">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div class="space-y-3">
+                <div class="flex items-center gap-2">
+                    <div class="w-7 h-7 rounded-lg bg-brand-500/20 flex items-center justify-center text-brand-400 border border-brand-500/30">
+                        <i class="fa-solid fa-compass text-xs"></i>
+                    </div>
+                    <span class="text-sm font-serif font-semibold text-white">知行导航</span>
+                </div>
+                <p class="font-light leading-relaxed text-slate-500">
+                    追求知行合一，打造优雅高效的互联网探索与实用网址精选导航系统。
+                </p>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-slate-200 mb-3 font-mono uppercase tracking-wider text-[11px]">快捷导航</h4>
+                <ul class="space-y-2 font-light">
+                    <li><a href="#search" class="hover:text-brand-300 transition-colors">探索搜索</a></li>
+                    <li><a href="#categories" class="hover:text-brand-300 transition-colors">精选合集</a></li>
+                    <li><a href="#quickTools" class="hover:text-brand-300 transition-colors">实用小工具</a></li>
+                    <li><a href="#customBookmarks" class="hover:text-brand-300 transition-colors">我的私人书签</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-slate-200 mb-3 font-mono uppercase tracking-wider text-[11px]">核心分类</h4>
+                <ul class="space-y-2 font-light">
+                    <li><a href="#categories" onclick="switchCategory('ai')" class="hover:text-brand-300 transition-colors">AI 智能应用</a></li>
+                    <li><a href="#categories" onclick="switchCategory('dev')" class="hover:text-brand-300 transition-colors">开发者社区</a></li>
+                    <li><a href="#categories" onclick="switchCategory('tools')" class="hover:text-brand-300 transition-colors">高效办公工具</a></li>
+                    <li><a href="#categories" onclick="switchCategory('design')" class="hover:text-brand-300 transition-colors">设计灵感灵动</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-semibold text-slate-200 mb-3 font-mono uppercase tracking-wider text-[11px]">关于与反馈</h4>
+                <p class="font-light leading-relaxed text-slate-500 mb-2">
+                    反馈与建议邮箱: palesquire71029@qq.com
+                </p>
+                <div class="flex gap-3 text-base text-slate-400 pt-1">
+                    <a href="https://github.com/PaleSquire71029" target="_blank" rel="noopener noreferrer" class="hover:text-brand-300 transition-colors" title="GitHub"><i class="fa-brands fa-github"></i></a>
+                    <a href="https://space.bilibili.com/1474060600" target="_blank" rel="noopener noreferrer" class="hover:text-brand-300 transition-colors" title="Bilibili"><i class="fa-brands fa-bilibili"></i></a>
+                    <a href="https://www.youtube.com/@ccc-lc3ct" target="_blank" rel="noopener noreferrer" class="hover:text-brand-300 transition-colors" title="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto border-t border-white/5 pt-6 flex flex-col sm:flex-row items-center justify-between text-slate-500 font-mono text-[11px] gap-2">
+            <div>© 2026 知行导航 Zhixing Hub. All Rights Reserved.</div>
+            <div>Built for Efficiency & Knowledge</div>
+        </div>
+    </footer>
+
+    <script>
+        /* ================================================================
+           知行导航 · 核心脚本
+           ================================================================ */
+
+        /* ---------- 1. 核心网址数据库 ---------- */
+        const defaultWebsites = [
+            // ===== AI 智能 =====
+            { id: 'ai_1', name: "ChatGPT", url: "https://chatgpt.com", icon: "fa-solid fa-robot", color: "text-emerald-400", bg: "bg-emerald-500/10", desc: "OpenAI 领先的通用生成式人工智能助手", category: "ai", hot: true },
+            { id: 'ai_2', name: "Claude", url: "https://claude.ai", icon: "fa-solid fa-brain", color: "text-amber-400", bg: "bg-amber-500/10", desc: "Anthropic 强悍的高智商长文本推理 AI 助手", category: "ai", hot: true },
+            { id: 'ai_3', name: "DeepSeek", url: "https://www.deepseek.com", icon: "fa-solid fa-bolt-lightning", color: "text-blue-400", bg: "bg-blue-500/10", desc: "开源强大的推理大模型与前沿 AI 引擎", category: "ai", hot: true },
+            { id: 'ai_4', name: "Kimi 智能助手", url: "https://kimi.moonshot.cn", icon: "fa-solid fa-moon", color: "text-purple-400", bg: "bg-purple-500/10", desc: "月之暗面长文本能力突破性 AI 对话助手", category: "ai", hot: true },
+            { id: 'ai_5', name: "通义千问", url: "https://tongyi.aliyun.com", icon: "fa-solid fa-cloud", color: "text-sky-400", bg: "bg-sky-500/10", desc: "阿里巴巴自研多模态全能大语言模型", category: "ai" },
+            { id: 'ai_6', name: "Midjourney", url: "https://www.midjourney.com", icon: "fa-solid fa-wand-magic-sparkles", color: "text-pink-400", bg: "bg-pink-500/10", desc: "全球画质顶级的艺术创作与 AI 图像生成", category: "ai" },
+            { id: 'ai_7', name: "Gemini", url: "https://gemini.google.com", icon: "fa-solid fa-gem", color: "text-blue-300", bg: "bg-blue-500/10", desc: "Google 多模态 AI 助手与智能创作平台", category: "ai", hot: true },
+            { id: 'ai_8', name: "Perplexity", url: "https://www.perplexity.ai", icon: "fa-solid fa-magnifying-glass", color: "text-cyan-300", bg: "bg-cyan-500/10", desc: "AI 搜索与带来源答案的知识检索工具", category: "ai" },
+            { id: 'ai_9', name: "Grok", url: "https://grok.com", icon: "fa-solid fa-bolt", color: "text-slate-200", bg: "bg-slate-500/10", desc: "xAI 对话式人工智能助手", category: "ai" },
+            { id: 'ai_10', name: "Copilot", url: "https://copilot.microsoft.com", icon: "fa-brands fa-microsoft", color: "text-sky-300", bg: "bg-sky-500/10", desc: "Microsoft AI 助手与生产力服务入口", category: "ai" },
+            { id: 'ai_11', name: "Poe", url: "https://poe.com", icon: "fa-solid fa-comments", color: "text-violet-300", bg: "bg-violet-500/10", desc: "多模型 AI 对话与机器人聚合平台", category: "ai" },
+            { id: 'ai_12', name: "Runway", url: "https://runwayml.com", icon: "fa-solid fa-film", color: "text-fuchsia-300", bg: "bg-fuchsia-500/10", desc: "AI 视频生成与视觉创作工具", category: "ai" },
+            { id: 'ai_13', name: "即梦 AI", url: "https://jimeng.jianying.com", icon: "fa-solid fa-image", color: "text-pink-300", bg: "bg-pink-500/10", desc: "中文 AI 图片与视频创作平台", category: "ai" },
+            { id: 'ai_14', name: "豆包", url: "https://www.doubao.com", icon: "fa-solid fa-comment-dots", color: "text-blue-300", bg: "bg-blue-500/10", desc: "字节跳动 AI 对话与内容创作助手", category: "ai" },
+
+            // ===== 开发者 / 编程 =====
+            { id: 'dev_1', name: "GitHub", url: "https://github.com", icon: "fa-brands fa-github", color: "text-slate-200", bg: "bg-slate-500/10", desc: "全球最大的开源软件代码托管与协作平台", category: "dev", hot: true },
+            { id: 'dev_2', name: "Stack Overflow", url: "https://stackoverflow.com", icon: "fa-brands fa-stack-overflow", color: "text-orange-400", bg: "bg-orange-500/10", desc: "全球技术开发者权威编程问答交流社区", category: "dev", hot: true },
+            { id: 'dev_3', name: "V2EX", url: "https://www.v2ex.com", icon: "fa-solid fa-comments", color: "text-slate-300", bg: "bg-slate-500/10", desc: "创意工作者、程序员高品质讨论社区", category: "dev", hot: true },
+            { id: 'dev_4', name: "掘金", url: "https://juejin.cn", icon: "fa-solid fa-cubes", color: "text-blue-400", bg: "bg-blue-500/10", desc: "面向前沿开发者的技术文章分享与成长社区", category: "dev" },
+            { id: 'dev_5', name: "LeetCode 力扣", url: "https://leetcode.cn", icon: "fa-solid fa-terminal", color: "text-amber-400", bg: "bg-amber-500/10", desc: "技术面试刷题、数据结构与算法提升平台", category: "dev" },
+            { id: 'dev_6', name: "MDN Web Docs", url: "https://developer.mozilla.org", icon: "fa-solid fa-book", color: "text-cyan-400", bg: "bg-cyan-500/10", desc: "权威全面的 Web 前端开发与 API 文档指南", category: "dev" },
+            { id: 'dev_7', name: "Vercel", url: "https://vercel.com", icon: "fa-solid fa-caret-up", color: "text-white", bg: "bg-white/10", desc: "现代 Web 框架应用极致云端部署托管平台", category: "dev" },
+            { id: 'dev_8', name: "Hugging Face", url: "https://huggingface.co", icon: "fa-solid fa-face-smile-wink", color: "text-yellow-400", bg: "bg-yellow-500/10", desc: "全球开源机器学习模型与数据集开源枢纽", category: "dev" },
+            { id: 'dev_9', name: "npm", url: "https://www.npmjs.com", icon: "fa-brands fa-npm", color: "text-red-400", bg: "bg-red-500/10", desc: "JavaScript 包管理与开源软件生态", category: "dev" },
+            { id: 'dev_10', name: "Dev.to", url: "https://dev.to", icon: "fa-brands fa-dev", color: "text-slate-200", bg: "bg-slate-500/10", desc: "开发者文章、经验分享与技术社区", category: "dev" },
+            { id: 'dev_11', name: "CodePen", url: "https://codepen.io", icon: "fa-brands fa-codepen", color: "text-slate-200", bg: "bg-slate-500/10", desc: "前端代码实验、作品展示与社区", category: "dev" },
+            { id: 'dev_12', name: "JSDelivr", url: "https://www.jsdelivr.com", icon: "fa-solid fa-gauge-high", color: "text-orange-300", bg: "bg-orange-500/10", desc: "全球开源 CDN 与前端资源加速服务", category: "dev" },
+            { id: 'dev_13', name: "Docker Hub", url: "https://hub.docker.com", icon: "fa-brands fa-docker", color: "text-blue-300", bg: "bg-blue-500/10", desc: "容器镜像仓库与开发者资源平台", category: "dev" },
+            { id: 'dev_14', name: "npm Trends", url: "https://npmtrends.com", icon: "fa-solid fa-chart-line", color: "text-emerald-300", bg: "bg-emerald-500/10", desc: "比较 npm 软件包流行度与下载趋势", category: "dev" },
+
+            // ===== 效率工具 =====
+            { id: 'tool_1', name: "Notion", url: "https://www.notion.so", icon: "fa-solid fa-note-sticky", color: "text-white", bg: "bg-white/10", desc: "模块化多功能笔记、知识库与任务管理", category: "tools", hot: true },
+            { id: 'tool_2', name: "DeepL 翻译", url: "https://www.deepl.com", icon: "fa-solid fa-language", color: "text-cyan-400", bg: "bg-cyan-500/10", desc: "超精准的 AI 神经网络智能多语言翻译", category: "tools", hot: true },
+            { id: 'tool_3', name: "TinyPNG", url: "https://tinypng.com", icon: "fa-solid fa-file-image", color: "text-green-400", bg: "bg-green-500/10", desc: "智能无损 PNG / JPG / WebP 极致在线压缩", category: "tools", hot: true },
+            { id: 'tool_4', name: "ProcessOn", url: "https://www.processon.com", icon: "fa-solid fa-diagram-project", color: "text-blue-400", bg: "bg-blue-500/10", desc: "专业在线流程图、思维导图协同绘制平台", category: "tools" },
+            { id: 'tool_5', name: "Excalidraw", url: "https://excalidraw.com", icon: "fa-solid fa-pen-ruler", color: "text-violet-400", bg: "bg-violet-500/10", desc: "手绘风格的虚拟在线白板与示意图绘制工具", category: "tools" },
+            { id: 'tool_6', name: "Carbon", url: "https://carbon.now.sh", icon: "fa-solid fa-code", color: "text-emerald-400", bg: "bg-emerald-500/10", desc: "生成极其美观的高清代码段图片展示工具", category: "tools" },
+            { id: 'tool_7', name: "Google Drive", url: "https://drive.google.com", icon: "fa-brands fa-google-drive", color: "text-yellow-300", bg: "bg-yellow-500/10", desc: "云端文件存储、同步与协作办公", category: "tools" },
+            { id: 'tool_8', name: "Squoosh 图片压缩", url: "https://squoosh.app", icon: "fa-solid fa-compress", color: "text-cyan-300", bg: "bg-cyan-500/10", desc: "浏览器本地图片压缩与格式转换", category: "tools" },
+            { id: 'tool_9', name: "JSON Crack", url: "https://jsoncrack.com", icon: "fa-solid fa-network-wired", color: "text-pink-300", bg: "bg-pink-500/10", desc: "将 JSON 数据可视化为交互式图表", category: "tools" },
+            { id: 'tool_10', name: "Regex101", url: "https://regex101.com", icon: "fa-solid fa-asterisk", color: "text-green-300", bg: "bg-green-500/10", desc: "正则表达式在线测试、调试与解释", category: "tools" },
+            { id: 'tool_11', name: "临时邮箱", url: "https://temp-mail.org", icon: "fa-solid fa-envelope", color: "text-slate-300", bg: "bg-slate-500/10", desc: "临时邮箱地址与一次性邮件服务", category: "tools" },
+            { id: 'tool_12', name: "Remove.bg", url: "https://www.remove.bg", icon: "fa-solid fa-eraser", color: "text-fuchsia-300", bg: "bg-fuchsia-500/10", desc: "在线自动抠图与背景移除工具", category: "tools" },
+
+            // ===== 设计灵感 =====
+            { id: 'design_1', name: "Figma", url: "https://www.figma.com", icon: "fa-brands fa-figma", color: "text-purple-400", bg: "bg-purple-500/10", desc: "跨平台协同 UI/UX 矢量界面与原型设计", category: "design", hot: true },
+            { id: 'design_2', name: "Canva 可画", url: "https://www.canva.cn", icon: "fa-solid fa-palette", color: "text-teal-400", bg: "bg-teal-500/10", desc: "海量丰富模板，在线轻松完成海报与演示", category: "design" },
+            { id: 'design_3', name: "站酷 ZCOOL", url: "https://www.zcool.com.cn", icon: "fa-solid fa-bezier-curve", color: "text-amber-500", bg: "bg-amber-500/10", desc: "中国人气高品质设计师视觉艺术作品互动社区", category: "design" },
+            { id: 'design_4', name: "Dribbble", url: "https://dribbble.com", icon: "fa-brands fa-dribbble", color: "text-pink-400", bg: "bg-pink-500/10", desc: "全球优秀设计创意人才画廊与作品展示灵感", category: "design" },
+            { id: 'design_5', name: "Behance", url: "https://www.behance.net", icon: "fa-brands fa-behance", color: "text-blue-300", bg: "bg-blue-500/10", desc: "Adobe 旗下创意作品与设计师作品集社区", category: "design" },
+            { id: 'design_6', name: "Unsplash", url: "https://unsplash.com", icon: "fa-solid fa-camera", color: "text-slate-100", bg: "bg-white/10", desc: "高质量免费摄影图片素材库", category: "design" },
+            { id: 'design_7', name: "Pinterest", url: "https://www.pinterest.com", icon: "fa-brands fa-pinterest", color: "text-red-400", bg: "bg-red-500/10", desc: "图片灵感、视觉收藏与创意发现平台", category: "design" },
+            { id: 'design_8', name: "Iconify", url: "https://icon-sets.iconify.design", icon: "fa-solid fa-icons", color: "text-amber-300", bg: "bg-amber-500/10", desc: "海量开源图标集合与在线搜索工具", category: "design" },
+            { id: 'design_9', name: "Google Fonts", url: "https://fonts.google.com", icon: "fa-solid fa-font", color: "text-blue-300", bg: "bg-blue-500/10", desc: "免费开源字体浏览与网页字体资源", category: "design" },
+
+            // ===== 影视娱乐 =====
+            { id: 'ent_1', name: "哔哩哔哩", url: "https://www.bilibili.com", icon: "fa-brands fa-bilibili", color: "text-pink-400", bg: "bg-pink-500/10", desc: "国内优质视频弹幕与二次元创作互动社区", category: "entertainment", hot: true },
+            { id: 'ent_2', name: "YouTube", url: "https://www.youtube.com", icon: "fa-brands fa-youtube", color: "text-red-500", bg: "bg-red-500/10", desc: "全球最大的视频分享与流媒体平台", category: "entertainment", hot: true },
+            { id: 'ent_3', name: "网易云音乐", url: "https://music.163.com", icon: "fa-solid fa-music", color: "text-red-400", bg: "bg-red-500/10", desc: "高品质在线音乐与温暖评论交流平台", category: "entertainment" },
+            { id: 'ent_4', name: "知乎", url: "https://www.zhihu.com", icon: "fa-solid fa-circle-question", color: "text-blue-400", bg: "bg-blue-500/10", desc: "专业有深度的高质量问答与深度创作社区", category: "entertainment", hot: true },
+            { id: 'ent_5', name: "小红书", url: "https://www.xiaohongshu.com", icon: "fa-solid fa-heart", color: "text-rose-400", bg: "bg-rose-500/10", desc: "年轻人的生活方式与多元经验分享社区", category: "entertainment" },
+            { id: 'ent_6', name: "豆瓣", url: "https://www.douban.com", icon: "fa-solid fa-book-open", color: "text-emerald-400", bg: "bg-emerald-500/10", desc: "图书、电影、音乐的高分评分评论社区", category: "entertainment" },
+            { id: 'ent_7', name: "腾讯视频", url: "https://v.qq.com", icon: "fa-solid fa-play", color: "text-green-300", bg: "bg-green-500/10", desc: "热门影视、综艺与纪录片视频平台", category: "entertainment" },
+            { id: 'ent_8', name: "爱奇艺", url: "https://www.iqiyi.com", icon: "fa-solid fa-tv", color: "text-green-300", bg: "bg-green-500/10", desc: "在线视频、电影、电视剧与综艺平台", category: "entertainment" },
+            { id: 'ent_9', name: "Spotify", url: "https://open.spotify.com", icon: "fa-brands fa-spotify", color: "text-green-400", bg: "bg-green-500/10", desc: "全球音乐与播客流媒体服务", category: "entertainment" },
+            { id: 'ent_10', name: "IMDb", url: "https://www.imdb.com", icon: "fa-solid fa-clapperboard", color: "text-yellow-300", bg: "bg-yellow-500/10", desc: "电影、电视剧与影视人物资料库", category: "entertainment" },
+
+            // ===== 游戏社区 =====
+            { id: 'game_1', name: "Steam 商店", url: "https://store.steampowered.com", icon: "fa-brands fa-steam", color: "text-sky-400", bg: "bg-sky-500/10", desc: "全球最大的 PC 单机与联机游戏数字购买平台", category: "game", hot: true },
+            { id: 'game_2', name: "小黑盒", url: "https://www.xiaoheihei.cn", icon: "fa-solid fa-cubes-stacked", color: "text-amber-300", bg: "bg-amber-500/10", desc: "硬核战绩查询、游戏战报与玩家社区", category: "game" },
+            { id: 'game_3', name: "TapTap", url: "https://www.taptap.cn", icon: "fa-solid fa-mobile-screen", color: "text-teal-300", bg: "bg-teal-500/10", desc: "高品质手游发现与玩家真实评价社区", category: "game" },
+            { id: 'game_4', name: "NGA 玩家社区", url: "https://bbs.nga.cn", icon: "fa-solid fa-users", color: "text-amber-500", bg: "bg-amber-500/10", desc: "专业魔兽世界、硬核游戏讨论论坛", category: "game" },
+            { id: 'game_5', name: "机核 GCORES", url: "https://www.gcores.com", icon: "fa-solid fa-headphones", color: "text-red-400", bg: "bg-red-500/10", desc: "游戏文化、电台、深度极客文章分享", category: "game" },
+            { id: 'game_6', name: "Epic Games", url: "https://store.epicgames.com", icon: "fa-solid fa-gamepad", color: "text-slate-100", bg: "bg-white/10", desc: "PC 游戏商店与 Epic 游戏生态", category: "game" },
+            { id: 'game_7', name: "PlayStation", url: "https://www.playstation.com", icon: "fa-brands fa-playstation", color: "text-blue-300", bg: "bg-blue-500/10", desc: "PlayStation 官方游戏与社区入口", category: "game" },
+            { id: 'game_8', name: "Xbox", url: "https://www.xbox.com", icon: "fa-brands fa-xbox", color: "text-green-300", bg: "bg-green-500/10", desc: "Xbox 游戏、服务与社区入口", category: "game" },
+            { id: 'game_9', name: "Nexus Mods", url: "https://www.nexusmods.com", icon: "fa-solid fa-puzzle-piece", color: "text-orange-300", bg: "bg-orange-500/10", desc: "大型 PC 游戏 Mod 资源社区", category: "game" },
+
+            // ===== 学习知识 =====
+            { id: 'learn_1', name: "中国大学 MOOC", url: "https://www.icourse163.org", icon: "fa-solid fa-graduation-cap", color: "text-red-400", bg: "bg-red-500/10", desc: "国家精品高校在线公开课程免费学习平台", category: "learning", hot: true },
+            { id: 'learn_2', name: "菜鸟教程", url: "https://www.runoob.com", icon: "fa-solid fa-book-bookmark", color: "text-green-400", bg: "bg-green-500/10", desc: "全套基础编程语言入门与在线实操测试", category: "learning" },
+            { id: 'learn_3', name: "维基百科", url: "https://zh.wikipedia.org", icon: "fa-solid fa-globe", color: "text-slate-300", bg: "bg-slate-500/10", desc: "自由的在线百科全书与多语言人类知识库", category: "learning" },
+            { id: 'learn_4', name: "Product Hunt", url: "https://www.producthunt.com", icon: "fa-brands fa-product-hunt", color: "text-orange-500", bg: "bg-orange-500/10", desc: "每天发现最新前沿互联网产品与创新工具", category: "learning" },
+            { id: 'learn_5', name: "Coursera", url: "https://www.coursera.org", icon: "fa-solid fa-user-graduate", color: "text-blue-300", bg: "bg-blue-500/10", desc: "大学与企业在线课程学习平台", category: "learning" },
+            { id: 'learn_6', name: "edX", url: "https://www.edx.org", icon: "fa-solid fa-university", color: "text-red-300", bg: "bg-red-500/10", desc: "高校与机构提供的在线课程平台", category: "learning" },
+            { id: 'learn_7', name: "Khan Academy", url: "https://www.khanacademy.org", icon: "fa-solid fa-chalkboard-user", color: "text-green-300", bg: "bg-green-500/10", desc: "数学、科学与基础学科免费学习平台", category: "learning" },
+            { id: 'learn_8', name: "WolframAlpha", url: "https://www.wolframalpha.com", icon: "fa-solid fa-calculator", color: "text-orange-300", bg: "bg-orange-500/10", desc: "计算知识引擎与数学科学查询工具", category: "learning" },
+            { id: 'learn_9', name: "arXiv", url: "https://arxiv.org", icon: "fa-solid fa-file-lines", color: "text-red-300", bg: "bg-red-500/10", desc: "物理、数学、计算机等领域预印本论文库", category: "learning" },
+
+            // ===== 生活服务 =====
+            { id: 'life_1', name: "高德地图", url: "https://www.amap.com", icon: "fa-solid fa-location-dot", color: "text-blue-400", bg: "bg-blue-500/10", desc: "精确路线导航与实时路况出行规划", category: "life", hot: true },
+            { id: 'life_2', name: "铁路 12306", url: "https://www.12306.cn", icon: "fa-solid fa-train", color: "text-blue-500", bg: "bg-blue-500/10", desc: "中国铁路官方客票预订与行程管理", category: "life", hot: true },
+            { id: 'life_3', name: "淘宝网", url: "https://www.taobao.com", icon: "fa-solid fa-cart-shopping", color: "text-orange-400", bg: "bg-orange-500/10", desc: "亚太地区大型综合网上购物消费平台", category: "life" },
+            { id: 'life_4', name: "京东", url: "https://www.jd.com", icon: "fa-solid fa-bag-shopping", color: "text-red-500", bg: "bg-red-500/10", desc: "正品自营极速送达的数码家电电商平台", category: "life" },
+            { id: 'life_5', name: "下厨房", url: "https://www.xiachufang.com", icon: "fa-solid fa-utensils", color: "text-amber-400", bg: "bg-amber-500/10", desc: "美食菜谱分享与家庭烹饪灵感生活社区", category: "life" },
+            { id: 'life_6', name: "Google Maps", url: "https://maps.google.com", icon: "fa-solid fa-map-location-dot", color: "text-green-300", bg: "bg-green-500/10", desc: "地图、路线规划与地点信息服务", category: "life" },
+            { id: 'life_7', name: "Tripadvisor", url: "https://www.tripadvisor.com", icon: "fa-solid fa-plane", color: "text-emerald-300", bg: "bg-emerald-500/10", desc: "旅行目的地、酒店、餐厅与游玩信息", category: "life" },
+            { id: 'life_8', name: "Airbnb", url: "https://www.airbnb.com", icon: "fa-solid fa-house", color: "text-rose-300", bg: "bg-rose-500/10", desc: "旅行住宿与特色房源预订平台", category: "life" },
+            { id: 'life_9', name: "Amazon", url: "https://www.amazon.com", icon: "fa-brands fa-amazon", color: "text-orange-300", bg: "bg-orange-500/10", desc: "全球综合电商与在线购物平台", category: "life" },
+            { id: 'life_10', name: "Google 翻译", url: "https://translate.google.com", icon: "fa-solid fa-language", color: "text-blue-300", bg: "bg-blue-500/10", desc: "Google 多语言在线翻译服务", category: "life" }
+        ];
+
+        /* ---------- 2. 名言警句库 ---------- */
+        const quotes = [
+            { text: "知是行之始，行是知之成。知行合一，笃行致远。", author: "— 王阳明" },
+            { text: "博学之，审问之，慎思之，明辨之，笃行之。", author: "— 《礼记·中庸》" },
+            { text: "路漫漫其修远兮，吾将上下而求索。", author: "— 屈原" },
+            { text: "不闻不若闻之，闻之不若见之，见之不若知之，知之不若行之。", author: "— 荀子" },
+            { text: "Stay hungry, stay foolish.", author: "— Steve Jobs" },
+            { text: "Simplicity is the ultimate sophistication.", author: "— Leonardo da Vinci" }
+        ];
+
+        /* ---------- 3. 状态管理 ---------- */
+        let currentSearchEngine = 'google';
+        let currentCategory = 'all';
+        let displayLimit = 20;
+        let viewMode = 'grid';
+        let myCustomBookmarks = [];
+        let pinnedSiteIds = ['ai_1', 'ai_3', 'dev_1', 'tool_1', 'ent_1', 'learn_1'];
+
+        let searchSuggestions = [];
+        let suggestIndex = -1;
+
+        (function loadLocalState() {
+            try {
+                const rawBookmarks = localStorage.getItem('zhixing_custom_bookmarks');
+                if (rawBookmarks) {
+                    const parsed = JSON.parse(rawBookmarks);
+                    if (Array.isArray(parsed)) myCustomBookmarks = parsed;
+                }
+            } catch (e) { myCustomBookmarks = []; }
+
+            try {
+                const rawPinned = localStorage.getItem('zhixing_pinned_ids');
+                if (rawPinned) {
+                    const parsed = JSON.parse(rawPinned);
+                    if (Array.isArray(parsed) && parsed.length) pinnedSiteIds = parsed;
+                }
+            } catch (e) { /* 使用默认 */ }
+        })();
+
+        /* ---------- 4. 图标兜底 ---------- */
+        function iconClass(site) {
+            const raw = String((site && site.icon) || '').trim();
+            if (!/fa-(solid|regular|brands)\s/.test(raw)) return 'fa-solid fa-globe';
+            if (/(text-|bg-|w-|h-)/.test(raw)) return 'fa-solid fa-globe';
+            return raw;
+        }
+
+        /* ---------- 5. 拼音索引 ---------- */
+        const pinyinCache = new Map();
+
+        function pinyinOf(text) {
+            const key = String(text || '');
+            if (!key) return { full: '', initials: '' };
+            if (pinyinCache.has(key)) return pinyinCache.get(key);
+
+            const res = { full: '', initials: '' };
+            try {
+                const lib = window.pinyinPro || window.pinyin;
+                if (lib && typeof lib.pinyin === 'function') {
+                    const full = lib.pinyin(key, { toneType: 'none', type: 'array', nonZh: 'consecutive' });
+                    res.full = (Array.isArray(full) ? full.join('') : String(full)).toLowerCase().replace(/[^a-z0-9]/g, '');
+                    const ini = lib.pinyin(key, { pattern: 'first', toneType: 'none', type: 'array', nonZh: 'consecutive' });
+                    res.initials = (Array.isArray(ini) ? ini.join('') : String(ini)).toLowerCase().replace(/[^a-z0-9]/g, '');
+                }
+            } catch (err) { /* 降级为纯文本匹配 */ }
+
+            pinyinCache.set(key, res);
+            return res;
+        }
+
+        function matchesQuery(site, rawQuery) {
+            const q = String(rawQuery || '').trim().toLowerCase();
+            if (!q) return true;
+
+            const compact = q.replace(/\s+/g, '');
+            const name = String(site.name || '').toLowerCase();
+            const desc = String(site.desc || '').toLowerCase();
+            const url = String(site.url || '').toLowerCase();
+            const cat = getCategoryLabel(site.category).toLowerCase();
+
+            if (name.includes(q) || name.includes(compact)) return true;
+            if (desc.includes(q) || desc.includes(compact)) return true;
+            if (url.includes(compact)) return true;
+            if (cat.includes(compact)) return true;
+
+            if (/[a-z0-9]/.test(compact)) {
+                const py = pinyinOf(site.name);
+                if (py.full && py.full.includes(compact)) return true;
+                if (py.initials && py.initials.includes(compact)) return true;
+            }
+            return false;
+        }
+
+        function escapeHtml(str) {
+            return String(str == null ? '' : str)
+                .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        /* ---------- 6. 拼音库异步加载 ---------- */
+        const PINYIN_SOURCES = [
+            'https://cdn.jsdelivr.net/npm/pinyin-pro@3/dist/index.js',
+            'https://unpkg.com/pinyin-pro@3/dist/index.js'
+        ];
+        let pinyinLoaded = false;
+
+        function ensurePinyinLib(index = 0) {
+            if (pinyinLoaded) return;
+            const lib = window.pinyinPro || window.pinyin;
+            if (lib && typeof lib.pinyin === 'function') { pinyinLoaded = true; return; }
+            if (index >= PINYIN_SOURCES.length) return;
+
+            const s = document.createElement('script');
+            s.async = true;
+            s.src = PINYIN_SOURCES[index];
+            s.onload = () => {
+                const okLib = window.pinyinPro || window.pinyin;
+                if (okLib && typeof okLib.pinyin === 'function') {
+                    pinyinLoaded = true;
+                    pinyinCache.clear();
+                    const q = document.getElementById('searchInput')?.value || '';
+                    if (q.trim()) renderSearchSuggestions(q);
+                    renderWebsites();
+                } else {
+                    ensurePinyinLib(index + 1);
+                }
+            };
+            s.onerror = () => ensurePinyinLib(index + 1);
+            document.head.appendChild(s);
+        }
+
+        /* ---------- 7. 初始化 ---------- */
+        function boot() {
+            try { initBackgroundCanvas(); } catch (e) {}
+            try { initClockAndGreeting(); } catch (e) {}
+            try { renderPinnedDock(); } catch (e) {}
+            try { renderCategoryTabs(); } catch (e) {}
+            try { renderWebsites(); } catch (e) {}
+            try { renderCustomBookmarks(); } catch (e) {}
+            try { setupEventListeners(); } catch (e) {}
+            ensurePinyinLib();
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', boot);
+        } else {
+            boot();
+        }
+
+        function getAllWebsites() {
+            return defaultWebsites.concat(myCustomBookmarks);
+        }
+
+        /* ---------- 8. 背景粒子 Canvas ---------- */
+        function initBackgroundCanvas() {
+            const canvas = document.getElementById('bgCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            if (!ctx) return;
+
+            let width = canvas.width = window.innerWidth;
+            let height = canvas.height = window.innerHeight;
+
+            window.addEventListener('resize', () => {
+                width = canvas.width = window.innerWidth;
+                height = canvas.height = window.innerHeight;
+            });
+
+            const particles = [];
+            for (let i = 0; i < 35; i++) {
+                particles.push({
+                    x: Math.random() * width, y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * 0.4, vy: (Math.random() - 0.5) * 0.4,
+                    radius: Math.random() * 2 + 1, alpha: Math.random() * 0.4 + 0.1
+                });
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, width, height);
+                for (let i = 0; i < particles.length; i++) {
+                    const p = particles[i];
+                    p.x += p.vx; p.y += p.vy;
+                    if (p.x < 0) p.x = width; if (p.x > width) p.x = 0;
+                    if (p.y < 0) p.y = height; if (p.y > height) p.y = 0;
+                    ctx.beginPath(); ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(176, 144, 86, ' + p.alpha + ')'; ctx.fill();
+                }
+                requestAnimationFrame(animate);
+            }
+            animate();
+        }
+
+        /* ---------- 9. 时钟与问候 ---------- */
+        function initClockAndGreeting() {
+            const clockEl = document.getElementById('liveClock');
+            const greetingText = document.getElementById('greetingText');
+            const greetingIcon = document.getElementById('greetingIcon');
+
+            function update() {
+                const now = new Date();
+                const hours = now.getHours();
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                const seconds = String(now.getSeconds()).padStart(2, '0');
+                if (clockEl) clockEl.textContent = String(hours).padStart(2, '0') + ':' + minutes + ':' + seconds;
+
+                let text = "知行合一 · 止于至善";
+                let icon = '<i class="fa-solid fa-sun text-amber-400"></i>';
+
+                if (hours >= 5 && hours < 12) {
+                    text = "早安，开启高效充实的一天"; icon = '<i class="fa-solid fa-sun text-amber-400"></i>';
+                } else if (hours >= 12 && hours < 18) {
+                    text = "下午好，保持专注与敏捷思考"; icon = '<i class="fa-solid fa-cloud-sun text-amber-300"></i>';
+                } else {
+                    text = "晚上好，享受沉淀与探索时刻"; icon = '<i class="fa-solid fa-moon text-indigo-400"></i>';
+                }
+                if (greetingText) greetingText.textContent = text;
+                if (greetingIcon) greetingIcon.innerHTML = icon;
+            }
+            update(); setInterval(update, 1000);
+        }
+
+        /* ---------- 10. 常驻 Dock ---------- */
+        function renderPinnedDock() {
+            const dock = document.getElementById('pinnedDock');
+            if (!dock) return;
+            const pinnedList = getAllWebsites().filter(site => pinnedSiteIds.indexOf(site.id) !== -1);
+
+            if (pinnedList.length === 0) {
+                dock.innerHTML = '<span class="text-xs text-slate-500 font-mono">点击卡片右上角星号钉选快捷网站</span>'; return;
+            }
+            dock.innerHTML = pinnedList.map(site => 
+                '<a href="' + escapeHtml(site.url) + '" target="_blank" rel="noopener noreferrer" class="glass-panel px-3 py-1.5 rounded-xl border border-white/10 hover:border-brand-500/40 flex items-center gap-2 text-xs text-slate-200 hover:text-brand-300 transition-all hover:-translate-y-0.5 shadow-sm">' +
+                    '<i class="' + iconClass(site) + ' ' + (site.color || 'text-brand-400') + ' text-xs"></i>' +
+                    '<span class="font-medium">' + escapeHtml(site.name) + '</span>' +
+                '</a>').join('');
+        }
+
+        function togglePinSite(siteId, event) {
+            if (event) { event.preventDefault(); event.stopPropagation(); }
+            const idx = pinnedSiteIds.indexOf(siteId);
+            if (idx !== -1) pinnedSiteIds.splice(idx, 1); else pinnedSiteIds.push(siteId);
+            try { localStorage.setItem('zhixing_pinned_ids', JSON.stringify(pinnedSiteIds)); } catch (e) {}
+            renderPinnedDock(); renderWebsites();
+        }
+
+        /* ---------- 11. 分类 Tab ---------- */
+        function renderCategoryTabs() {
+            const container = document.getElementById('categoryFilterBar');
+            if (!container) return;
+            const categories = [
+                { id: 'all', name: '全部', icon: 'fa-border-all' }, { id: 'ai', name: 'AI 智能', icon: 'fa-robot' },
+                { id: 'dev', name: '开发者', icon: 'fa-code' }, { id: 'tools', name: '效率工具', icon: 'fa-wrench' },
+                { id: 'design', name: '设计灵感', icon: 'fa-palette' }, { id: 'entertainment', name: '影视娱乐', icon: 'fa-tv' },
+                { id: 'game', name: '游戏社区', icon: 'fa-gamepad' }, { id: 'learning', name: '学习知识', icon: 'fa-graduation-cap' },
+                { id: 'life', name: '生活服务', icon: 'fa-heart' }
+            ];
+            container.innerHTML = categories.map(cat => {
+                const active = cat.id === currentCategory;
+                return '<button data-category="' + cat.id + '" class="category-tab px-3 py-1.5 rounded-lg text-xs font-medium ' +
+                    (active ? 'bg-brand-500/20 text-brand-300 border border-brand-500/30' : 'text-slate-400 hover:text-white hover:bg-white/5') +
+                    ' flex items-center gap-1.5 whitespace-nowrap transition-all"><i class="fa-solid ' + cat.icon + '"></i>' + cat.name + '</button>';
+            }).join('');
+        }
+
+        function switchCategory(catId) {
+            currentCategory = catId; displayLimit = 20; renderCategoryTabs(); renderWebsites();
+        }
+
+        /* ---------- 12. 主网址网格渲染 ---------- */
+        function renderWebsites(query) {
+            const q = (query === undefined || query === null) ? '' : String(query);
+            const container = document.getElementById('websiteGridContainer');
+            const statsEl = document.getElementById('siteCountStats');
+            const loadMoreBtn = document.getElementById('loadMoreWebsitesBtn');
+            if (!container) return;
+
+            const filtered = getAllWebsites().filter(site => {
+                if (currentCategory !== 'all' && site.category !== currentCategory) return false;
+                return matchesQuery(site, q);
+            });
+
+            const total = filtered.length;
+            const sliced = filtered.slice(0, displayLimit);
+
+            if (statsEl) statsEl.textContent = '已显示 ' + sliced.length + ' / ' + total + ' 个资源';
+            if (loadMoreBtn) loadMoreBtn.style.display = (sliced.length >= total) ? 'none' : 'inline-flex';
+
+            if (sliced.length === 0) {
+                container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4';
+                container.innerHTML = '<div class="col-span-full py-12 text-center text-slate-500 glass-panel rounded-2xl"><i class="fa-solid fa-magnifying-glass text-2xl mb-2 opacity-50"></i><p class="text-xs">未匹配到符合条件的网站资源</p></div>';
+                return;
+            }
+
+            if (viewMode === 'grid') {
+                container.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4';
+                container.innerHTML = sliced.map(site => {
+                    const isPinned = pinnedSiteIds.indexOf(site.id) !== -1;
+                    return '<a href="' + escapeHtml(site.url) + '" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover p-4 rounded-xl border border-white/10 flex flex-col justify-between group relative">' +
+                        '<div><div class="flex items-center justify-between gap-2 mb-2.5"><div class="flex items-center gap-2.5">' +
+                            '<div class="w-9 h-9 rounded-lg ' + (site.bg || 'bg-brand-500/10') + ' flex items-center justify-center ' + (site.color || 'text-brand-400') + ' text-base shrink-0 group-hover:scale-110 transition-transform"><i class="' + iconClass(site) + '"></i></div>' +
+                            '<div><h3 class="text-sm font-semibold text-white group-hover:text-brand-300 transition-colors line-clamp-1">' + escapeHtml(site.name) + '</h3><span class="text-[10px] text-slate-500 font-mono">' + getCategoryLabel(site.category) + '</span></div>' +
+                        '</div><div class="flex items-center gap-1.5">' +
+                            (site.hot ? '<span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-brand-500/10 text-brand-300 border border-brand-500/20">热门</span>' : '') +
+                            '<button onclick="togglePinSite(\'' + site.id + '\', event)" class="p-1 text-slate-500 hover:text-amber-400 transition-colors ' + (isPinned ? 'text-amber-400' : 'opacity-0 group-hover:opacity-100') + '" title="' + (isPinned ? '取消固定' : '固定到顶部Dock') + '"><i class="' + (isPinned ? 'fa-solid' : 'fa-regular') + ' fa-star text-xs"></i></button>' +
+                        '</div></div><p class="text-xs text-slate-400 font-light leading-relaxed line-clamp-2">' + escapeHtml(site.desc || '实用精选在线链接') + '</p></div></a>';
+                }).join('');
+            } else {
+                container.className = 'grid grid-cols-1 sm:grid-cols-2 gap-3';
+                container.innerHTML = sliced.map(site => {
+                    const isPinned = pinnedSiteIds.indexOf(site.id) !== -1;
+                    return '<a href="' + escapeHtml(site.url) + '" target="_blank" rel="noopener noreferrer" class="glass-panel glass-panel-hover p-3 rounded-xl border border-white/10 flex items-center justify-between group">' +
+                        '<div class="flex items-center gap-3"><div class="w-8 h-8 rounded-lg ' + (site.bg || 'bg-brand-500/10') + ' flex items-center justify-center ' + (site.color || 'text-brand-400') + ' text-sm shrink-0"><i class="' + iconClass(site) + '"></i></div>' +
+                        '<div><h3 class="text-xs font-semibold text-white group-hover:text-brand-300">' + escapeHtml(site.name) + '</h3><p class="text-[11px] text-slate-400 line-clamp-1">' + escapeHtml(site.desc || '实用精选在线链接') + '</p></div></div>' +
+                        '<div class="flex items-center gap-2"><button onclick="togglePinSite(\'' + site.id + '\', event)" class="p-1 text-slate-500 hover:text-amber-400 ' + (isPinned ? 'text-amber-400' : 'opacity-0 group-hover:opacity-100') + '" title="固定"><i class="' + (isPinned ? 'fa-solid' : 'fa-regular') + ' fa-star text-xs"></i></button><i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-brand-300 transition-colors"></i></div></a>';
+                }).join('');
+            }
+        }
+
+        function getCategoryLabel(cat) {
+            const map = { ai: 'AI智能', dev: '开发者', tools: '效率工具', design: '设计灵感', entertainment: '影视娱乐', game: '游戏社区', learning: '学习知识', life: '生活服务' };
+            return map[cat] || '综合';
+        }
+
+        /* ---------- 13. 自定义书签 ---------- */
+        function renderCustomBookmarks() {
+            const container = document.getElementById('customBookmarksGrid');
+            if (!container) return;
+            if (myCustomBookmarks.length === 0) {
+                container.innerHTML = '<div class="col-span-full glass-panel p-8 rounded-2xl border border-dashed border-white/10 text-center"><i class="fa-solid fa-bookmark text-3xl text-slate-600 mb-3"></i><h4 class="text-sm text-slate-300 font-medium mb-1">暂无自定义私房书签</h4><p class="text-xs text-slate-500 font-light mb-4">您可以随时添加常用网址，它将安全存储在您的本机浏览器中</p><button onclick="document.getElementById(\'openAddModalBtn\').click()" class="px-4 py-2 rounded-xl bg-brand-500/20 text-brand-300 border border-brand-500/30 text-xs font-medium hover:bg-brand-500/30 transition-all"><i class="fa-solid fa-plus mr-1"></i>添加第一个书签</button></div>';
+                return;
+            }
+            container.innerHTML = myCustomBookmarks.map((site, index) => 
+                '<div class="glass-panel p-4 rounded-xl border border-white/10 flex flex-col justify-between group relative"><div class="flex items-start justify-between gap-2 mb-2">' +
+                '<a href="' + escapeHtml(site.url) + '" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2.5 hover:text-brand-300"><div class="w-8 h-8 rounded-lg bg-brand-500/10 text-brand-400 border border-brand-500/20 flex items-center justify-center text-sm shrink-0"><i class="fa-solid fa-globe"></i></div>' +
+                '<div><h4 class="text-xs font-semibold text-white group-hover:text-brand-300 line-clamp-1">' + escapeHtml(site.name) + '</h4><span class="text-[10px] text-slate-500 font-mono">' + getCategoryLabel(site.category) + '</span></div></a>' +
+                '<button onclick="deleteCustomBookmark(' + index + ')" class="text-slate-500 hover:text-red-400 p-1 opacity-0 group-hover:opacity-100 transition-opacity" title="删除书签"><i class="fa-solid fa-trash-can text-xs"></i></button></div>' +
+                '<p class="text-[11px] text-slate-400 font-light line-clamp-2">' + escapeHtml(site.desc || '自定添加的高效链接') + '</p></div>').join('');
+        }
+
+        function deleteCustomBookmark(index) {
+            const removed = myCustomBookmarks.splice(index, 1);
+            if (removed && removed[0]) {
+                const rid = removed[0].id;
+                const pi = pinnedSiteIds.indexOf(rid);
+                if (pi !== -1) pinnedSiteIds.splice(pi, 1);
+                try { localStorage.setItem('zhixing_pinned_ids', JSON.stringify(pinnedSiteIds)); } catch (e) {}
+            }
+            try { localStorage.setItem('zhixing_custom_bookmarks', JSON.stringify(myCustomBookmarks)); } catch (e) {}
+            renderCustomBookmarks(); renderPinnedDock(); renderWebsites();
+        }
+
+        /* ---------- 14. 站内搜索建议 ---------- */
+        function renderSearchSuggestions(query) {
+            const overlay = document.getElementById('searchResultsOverlay');
+            if (!overlay) return;
+            const q = String(query || '').trim();
+            if (!q) { hideSearchSuggestions(); return; }
+
+            const matched = getAllWebsites().filter(site => matchesQuery(site, q)).slice(0, 8);
+            searchSuggestions = matched; suggestIndex = -1;
+
+            if (matched.length === 0) {
+                overlay.innerHTML = '<div class="sri-empty"><i class="fa-solid fa-magnifying-glass"></i><span>站内暂无匹配，按 Enter 直接用当前搜索引擎检索「' + escapeHtml(q) + '」</span></div>';
+            } else {
+                overlay.innerHTML = matched.map((site, i) => 
+                    '<a href="' + escapeHtml(site.url) + '" target="_blank" rel="noopener noreferrer" class="search-result-item" data-index="' + i + '">' +
+                    '<span class="sri-icon ' + (site.bg || 'bg-brand-500/10') + ' ' + (site.color || 'text-brand-400') + '"><i class="' + iconClass(site) + '"></i></span>' +
+                    '<span class="sri-body"><span class="sri-name">' + escapeHtml(site.name) + '</span><span class="sri-desc">' + escapeHtml(site.desc || '精选在线链接') + '</span></span>' +
+                    '<span class="sri-cat">' + getCategoryLabel(site.category) + '</span></a>').join('');
+            }
+            overlay.classList.remove('hidden');
+        }
+
+        function hideSearchSuggestions() {
+            const overlay = document.getElementById('searchResultsOverlay');
+            if (overlay) overlay.classList.add('hidden');
+            suggestIndex = -1; searchSuggestions = [];
+        }
+
+        function moveSuggestion(delta) {
+            const overlay = document.getElementById('searchResultsOverlay');
+            if (!overlay || !searchSuggestions.length) return;
+            suggestIndex += delta;
+            if (suggestIndex < 0) suggestIndex = searchSuggestions.length - 1;
+            if (suggestIndex >= searchSuggestions.length) suggestIndex = 0;
+            const items = overlay.querySelectorAll('.search-result-item');
+            for (let i = 0; i < items.length; i++) items[i].classList.toggle('search-item-selected', i === suggestIndex);
+            if (items[suggestIndex]) items[suggestIndex].scrollIntoView({ block: 'nearest' });
+        }
+
+        /* ---------- 15. 事件绑定 ---------- */
+        function setupEventListeners() {
+            const mobileBtn = document.getElementById('mobileMenuToggle');
+            const mobileMenu = document.getElementById('mobileMenu');
+            if (mobileBtn && mobileMenu) mobileBtn.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
+
+            const engineTabs = document.getElementById('engineTabs');
+            if (engineTabs) {
+                engineTabs.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.engine-tab');
+                    if (!btn) return;
+                    document.querySelectorAll('.engine-tab').forEach(b => {
+                        b.classList.remove('active', 'bg-brand-500/20', 'text-brand-300', 'border', 'border-brand-500/30');
+                        b.classList.add('text-slate-400');
+                    });
+                    btn.classList.add('active', 'bg-brand-500/20', 'text-brand-300', 'border', 'border-brand-500/30');
+                    btn.classList.remove('text-slate-400');
+                    currentSearchEngine = btn.dataset.engine || 'google';
+                });
+            }
+
+            const searchInput = document.getElementById('searchInput');
+            const searchSubmitBtn = document.getElementById('searchSubmitBtn');
+            const overlay = document.getElementById('searchResultsOverlay');
+            const searchBoxWrapper = document.getElementById('searchBoxWrapper');
+
+            function performSearch() {
+                const query = (searchInput && searchInput.value || '').trim();
+                if (!query) { if (searchInput) searchInput.focus(); return; }
+                const urls = {
+                    google: 'https://www.google.com/search?q=' + encodeURIComponent(query),
+                    bing: 'https://cn.bing.com/search?q=' + encodeURIComponent(query),
+                    bilibili: 'https://search.bilibili.com/all?keyword=' + encodeURIComponent(query),
+                    github: 'https://github.com/search?q=' + encodeURIComponent(query)
+                };
+                window.open(urls[currentSearchEngine] || urls.google, '_blank', 'noopener,noreferrer');
+            }
+
+            if (searchSubmitBtn) searchSubmitBtn.addEventListener('click', () => { hideSearchSuggestions(); performSearch(); });
+            if (searchInput) {
+                searchInput.addEventListener('input', () => renderSearchSuggestions(searchInput.value));
+                searchInput.addEventListener('focus', () => { if (searchInput.value.trim()) renderSearchSuggestions(searchInput.value); });
+                searchInput.addEventListener('keydown', (e) => {
+                    const overlayVisible = overlay && !overlay.classList.contains('hidden');
+                    if (e.key === 'ArrowDown' && overlayVisible && searchSuggestions.length) { e.preventDefault(); moveSuggestion(1); return; }
+                    if (e.key === 'ArrowUp' && overlayVisible && searchSuggestions.length) { e.preventDefault(); moveSuggestion(-1); return; }
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        if (overlayVisible && suggestIndex >= 0 && searchSuggestions[suggestIndex]) {
+                            window.open(searchSuggestions[suggestIndex].url, '_blank', 'noopener,noreferrer');
+                            hideSearchSuggestions();
+                        } else { hideSearchSuggestions(); performSearch(); }
+                        return;
+                    }
+                    if (e.key === 'Escape') { hideSearchSuggestions(); searchInput.blur(); }
+                });
+            }
+
+            document.addEventListener('click', (e) => {
+                if (!searchBoxWrapper) return;
+                if (!searchBoxWrapper.contains(e.target)) hideSearchSuggestions();
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+                    e.preventDefault();
+                    if (searchInput) { searchInput.focus(); try { searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' }); } catch (err) {} }
+                }
+            });
+
+            const refreshQuoteBtn = document.getElementById('refreshQuoteBtn');
+            if (refreshQuoteBtn) {
+                refreshQuoteBtn.addEventListener('click', () => {
+                    const random = quotes[Math.floor(Math.random() * quotes.length)];
+                    const qEl = document.getElementById('dailyQuote'); const aEl = document.getElementById('dailyQuoteAuthor');
+                    if (qEl) qEl.textContent = random.text; if (aEl) aEl.textContent = random.author;
+                });
+            }
+
+            const categoryFilterBar = document.getElementById('categoryFilterBar');
+            if (categoryFilterBar) {
+                categoryFilterBar.addEventListener('click', (e) => {
+                    const btn = e.target.closest('.category-tab'); if (!btn) return;
+                    currentCategory = btn.dataset.category; displayLimit = 20; renderCategoryTabs(); renderWebsites();
+                });
+            }
+
+            const viewGridBtn = document.getElementById('viewGridBtn');
+            const viewListBtn = document.getElementById('viewListBtn');
+            if (viewGridBtn && viewListBtn) {
+                viewGridBtn.addEventListener('click', () => { viewMode = 'grid'; viewGridBtn.className = 'p-1.5 rounded text-brand-300 bg-white/10 text-xs'; viewListBtn.className = 'p-1.5 rounded text-slate-400 hover:text-white text-xs'; renderWebsites(); });
+                viewListBtn.addEventListener('click', () => { viewMode = 'list'; viewListBtn.className = 'p-1.5 rounded text-brand-300 bg-white/10 text-xs'; viewGridBtn.className = 'p-1.5 rounded text-slate-400 hover:text-white text-xs'; renderWebsites(); });
+            }
+
+            const loadMoreBtn = document.getElementById('loadMoreWebsitesBtn');
+            if (loadMoreBtn) loadMoreBtn.addEventListener('click', () => { displayLimit += 12; renderWebsites(); });
+
+            const modal = document.getElementById('addSiteModal');
+            const openAddBtn = document.getElementById('openAddModalBtn');
+            const closeAddBtn = document.getElementById('closeAddModalBtn');
+            const cancelBtn = document.getElementById('cancelModalBtn');
+            const addForm = document.getElementById('addSiteForm');
+
+            if (openAddBtn && modal) openAddBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+            if (closeAddBtn && modal) closeAddBtn.addEventListener('click', () => modal.classList.add('hidden'));
+            if (cancelBtn && modal) cancelBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+            if (addForm) {
+                addForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('siteNameInput').value.trim();
+                    const url = document.getElementById('siteUrlInput').value.trim();
+                    const category = document.getElementById('siteCategoryInput').value;
+                    const desc = document.getElementById('siteDescInput').value.trim();
+                    if (!name || !url) return;
+                    const newBookmark = { id: 'c_' + Date.now(), name, url, category, desc };
+                    myCustomBookmarks.unshift(newBookmark);
+                    try { localStorage.setItem('zhixing_custom_bookmarks', JSON.stringify(myCustomBookmarks)); } catch (err) {}
+                    pinyinCache.delete(name);
+                    renderCustomBookmarks(); renderWebsites(); renderPinnedDock();
+                    addForm.reset(); if (modal) modal.classList.add('hidden');
+                });
+            }
+
+            const exportBtn = document.getElementById('exportBookmarksBtn');
+            const importTrigger = document.getElementById('importBookmarksTrigger');
+            const importInput = document.getElementById('importFileInput');
+            if (exportBtn) exportBtn.addEventListener('click', () => {
+                const dataStr = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(myCustomBookmarks, null, 2));
+                const dlAnchor = document.createElement('a'); dlAnchor.setAttribute('href', dataStr); dlAnchor.setAttribute('download', 'zhixing_bookmarks_' + new Date().toISOString().slice(0, 10) + '.json');
+                document.body.appendChild(dlAnchor); dlAnchor.click(); dlAnchor.remove();
+            });
+            if (importTrigger && importInput) importTrigger.addEventListener('click', () => importInput.click());
+            if (importInput) {
+                importInput.addEventListener('change', (e) => {
+                    const file = e.target.files[0]; if (!file) return;
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const imported = JSON.parse(event.target.result);
+                            if (Array.isArray(imported)) {
+                                myCustomBookmarks = imported;
+                                try { localStorage.setItem('zhixing_custom_bookmarks', JSON.stringify(myCustomBookmarks)); } catch (err) {}
+                                pinyinCache.clear(); renderCustomBookmarks(); renderWebsites(); renderPinnedDock();
+                            }
+                        } catch (err) { alert('格式不正确，导入失败'); }
+                    };
+                    reader.readAsText(file);
+                });
+            }
+
+            const genPwdBtn = document.getElementById('genPwdBtn');
+            const pwdRange = document.getElementById('pwdLengthRange');
+            const pwdVal = document.getElementById('pwdLengthVal');
+            const pwdResult = document.getElementById('pwdResult');
+            if (pwdRange && pwdVal) pwdRange.addEventListener('input', (e) => pwdVal.textContent = e.target.value);
+            if (genPwdBtn && pwdRange && pwdResult) {
+                genPwdBtn.addEventListener('click', () => {
+                    const len = parseInt(pwdRange.value, 10);
+                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+~';
+                    let res = '';
+                    for (let i = 0; i < len; i++) res += chars.charAt(Math.floor(Math.random() * chars.length));
+                    pwdResult.textContent = res;
+                    try {
+                        const el = document.createElement('textarea'); el.value = res; el.style.position = 'fixed'; el.style.opacity = '0';
+                        document.body.appendChild(el); el.select(); document.execCommand('copy'); document.body.removeChild(el);
+                        genPwdBtn.innerHTML = '<i class="fa-solid fa-check text-green-400"></i>已复制密码！';
+                    } catch (err) { genPwdBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i>已生成（请手动复制）'; }
+                    setTimeout(() => { genPwdBtn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i>生成并复制密码'; }, 2000);
+                });
+            }
+
+            const txtInput = document.getElementById('textToolInput');
+            const charCount = document.getElementById('charCount'); const wordCount = document.getElementById('wordCount'); const lineCount = document.getElementById('lineCount');
+            if (txtInput) {
+                txtInput.addEventListener('input', () => {
+                    const val = txtInput.value;
+                    if (charCount) charCount.textContent = val.length;
+                    if (wordCount) wordCount.textContent = val.trim() ? val.trim().split(/\s+/).length : 0;
+                    if (lineCount) lineCount.textContent = val ? val.split('\n').length : 0;
+                });
+                const upBtn = document.getElementById('uppercaseBtn'); const lowBtn = document.getElementById('lowercaseBtn'); const clrBtn = document.getElementById('clearTextBtn');
+                if (upBtn) upBtn.addEventListener('click', () => { txtInput.value = txtInput.value.toUpperCase(); txtInput.dispatchEvent(new Event('input')); });
+                if (lowBtn) lowBtn.addEventListener('click', () => { txtInput.value = txtInput.value.toLowerCase(); txtInput.dispatchEvent(new Event('input')); });
+                if (clrBtn) clrBtn.addEventListener('click', () => { txtInput.value = ''; txtInput.dispatchEvent(new Event('input')); });
+            }
+
+            const codecInput = document.getElementById('codecInput');
+            const b64Enc = document.getElementById('b64EncodeBtn'); const b64Dec = document.getElementById('b64DecodeBtn');
+            if (b64Enc) b64Enc.addEventListener('click', () => { if (!codecInput || !codecInput.value) return; try { codecInput.value = btoa(unescape(encodeURIComponent(codecInput.value))); } catch (e) {} });
+            if (b64Dec) b64Dec.addEventListener('click', () => { if (!codecInput || !codecInput.value) return; try { codecInput.value = decodeURIComponent(escape(atob(codecInput.value))); } catch (e) {} });
+        }
+
+        window.togglePinSite = togglePinSite;
+        window.deleteCustomBookmark = deleteCustomBookmark;
+        window.switchCategory = switchCategory;
+    </script>
+
+    <script>
+    /* 视觉增强：卡片入场与指针光晕（不阻塞核心功能） */
+    (function () {
+        try {
+            const pointerGlow = function () {
+                const cards = document.querySelectorAll('.glass-panel, .glass-card, .category-card');
+                cards.forEach(function (card) {
+                    card.addEventListener('pointermove', function (e) {
+                        const r = card.getBoundingClientRect();
+                        card.style.setProperty('--mx', (e.clientX - r.left) + 'px');
+                        card.style.setProperty('--my', (e.clientY - r.top) + 'px');
+                    }, { passive: true });
+                });
+            };
+            const style = document.createElement('style');
+            style.textContent = '.glass-panel, .glass-card, .category-card { --mx:50%; --my:50%; } .glass-panel:hover::before, .glass-card:hover::before, .category-card:hover::before { background: radial-gradient(240px circle at var(--mx) var(--my), rgba(255,255,255,.075), transparent 65%), linear-gradient(115deg, rgba(255,255,255,.10), transparent 22%, transparent 72%, rgba(255,255,255,.025)); }';
+            document.head.appendChild(style);
+            window.addEventListener('load', pointerGlow);
+        } catch (e) { /* 忽略增强失败 */ }
+    })();
+    </script>
+
+    <script>
+    /* 稳定性守护：视觉增强异常绝不阻断核心搜索与导航 */
+    window.addEventListener('error', function (e) {
+        const msg = String(e && e.message || '');
+        if (/typography|observer|animation|effect|pinyin/i.test(msg)) {
+            e.preventDefault();
+        }
+    }, true);
+    </script>
+
+</body>
+</html>
